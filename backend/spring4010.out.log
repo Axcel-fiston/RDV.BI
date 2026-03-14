@@ -1,0 +1,66 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.rdvbi:rdvbi-backend >-----------------------
+[INFO] Building rdvbi-backend 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.3:run (default-cli) > test-compile @ rdvbi-backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ rdvbi-backend ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 6 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ rdvbi-backend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ rdvbi-backend ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory C:\dev\RDV.BI\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ rdvbi-backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.3.3:run (default-cli) < test-compile @ rdvbi-backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.3:run (default-cli) @ rdvbi-backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.3)
+
+2026-03-13T16:29:53.231+01:00  INFO 52656 --- [           main] com.rdvbi.backend.BackendApplication     : Starting BackendApplication using Java 21.0.9 with PID 52656 (C:\dev\RDV.BI\backend\target\classes started by iteri in C:\dev\RDV.BI\backend)
+2026-03-13T16:29:53.234+01:00  INFO 52656 --- [           main] com.rdvbi.backend.BackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-03-13T16:29:53.987+01:00  INFO 52656 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-13T16:29:54.045+01:00  INFO 52656 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 52 ms. Found 6 JPA repository interfaces.
+2026-03-13T16:30:02.682+01:00  INFO 52656 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 4010 (http)
+2026-03-13T16:30:02.693+01:00  INFO 52656 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-13T16:30:02.694+01:00  INFO 52656 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.28]
+2026-03-13T16:30:02.746+01:00  INFO 52656 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-13T16:30:02.747+01:00  INFO 52656 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 9472 ms
+2026-03-13T16:30:03.102+01:00  INFO 52656 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-13T16:30:03.249+01:00  INFO 52656 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@70f85235
+2026-03-13T16:30:03.252+01:00  INFO 52656 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-13T16:30:03.277+01:00  INFO 52656 --- [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/rdvbi (PostgreSQL 18.3)
+2026-03-13T16:30:03.334+01:00  INFO 52656 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.033s)
+2026-03-13T16:30:03.399+01:00  INFO 52656 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 5
+2026-03-13T16:30:03.403+01:00  INFO 52656 --- [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-03-13T16:30:03.491+01:00  INFO 52656 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-13T16:30:03.531+01:00  INFO 52656 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-03-13T16:30:03.558+01:00  INFO 52656 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-13T16:30:03.833+01:00  INFO 52656 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-13T16:30:04.769+01:00  INFO 52656 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-13T16:30:04.809+01:00  INFO 52656 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13T16:30:05.397+01:00  WARN 52656 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13T16:30:05.460+01:00  INFO 52656 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13T16:30:05.461+01:00  WARN 52656 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-03-13T16:30:05.839+01:00  INFO 52656 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-03-13T16:30:06.289+01:00  INFO 52656 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 4010 (http) with context path '/'
+2026-03-13T16:30:06.300+01:00  INFO 52656 --- [           main] com.rdvbi.backend.BackendApplication     : Started BackendApplication in 13.433 seconds (process running for 13.781)

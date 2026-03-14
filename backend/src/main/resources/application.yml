@@ -1,0 +1,38 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/rdvbi}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:changeme}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+
+server:
+  port: ${PORT:4000}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET:ZHVtbXktc2VjcmV0LXNob3VsZC1iZS1iYXNlNjQtc3RyaW5nLWF0LWxlYXN0LTI1Ngo=}
+    access-ttl-seconds: ${SECURITY_JWT_ACCESS_TTL_SECONDS:900}
+    refresh-ttl-seconds: ${SECURITY_JWT_REFRESH_TTL_SECONDS:604800}

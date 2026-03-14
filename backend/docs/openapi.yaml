@@ -1,0 +1,1270 @@
+openapi: 3.1.0
+info:
+  title: RDV.BI API
+  version: 0.1.0
+  summary: Appointment booking, queue, and institution administration API
+  description: |
+    OpenAPI contract for the current RDV.BI backend.
+
+    Notes:
+    - Public endpoints live under `/api/public`.
+    - Authentication endpoints live under `/api/auth`.
+    - Admin endpoints require a bearer JWT issued by `/api/auth/login`.
+    - `POST /api/auth/bootstrap-admin` exists only for bootstrap and should be removed or disabled in production.
+servers:
+  - url: http://localhost:4000
+    description: Local development
+tags:
+  - name: Auth
+  - name: Public Institutions
+  - name: Public Appointments
+  - name: Admin Institutions
+  - name: Admin Services
+  - name: Admin Time Slots
+  - name: Admin Counters
+  - name: Admin Appointments
+  - name: Admin Users
+paths:
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Sign in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: New token pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/auth/bootstrap-admin:
+    post:
+      tags: [Auth]
+      summary: Bootstrap the first institution admin
+      description: Internal setup endpoint. Remove or disable in production.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapAdminRequest'
+      responses:
+        '200':
+          description: Admin created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: created
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/public/institutions/register:
+    post:
+      tags: [Public Institutions]
+      summary: Register an institution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutionRegistrationRequest'
+      responses:
+        '201':
+          description: Institution registration submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutionRegistrationResponse'
+        '409':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/public/institutions:
+    get:
+      tags: [Public Institutions]
+      summary: List approved institutions
+      responses:
+        '200':
+          description: Approved institutions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Institution'
+
+  /api/public/institutions/{slug}:
+    get:
+      tags: [Public Institutions]
+      summary: Get public institution details
+      parameters:
+        - $ref: '#/components/parameters/SlugParam'
+        - name: date
+          in: query
+          required: false
+          description: Filter time slots by date in `YYYY-MM-DD`
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Public institution payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicInstitutionPayload'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/public/appointments:
+    post:
+      tags: [Public Appointments]
+      summary: Create an appointment booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        '201':
+          description: Appointment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentCreateResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '409':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/pending:
+    get:
+      tags: [Admin Institutions]
+      summary: List pending institutions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Pending institutions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Institution'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/institutions/{id}/approve:
+    post:
+      tags: [Admin Institutions]
+      summary: Approve an institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalRequest'
+      responses:
+        '200':
+          description: Approved institution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/{id}/reject:
+    post:
+      tags: [Admin Institutions]
+      summary: Reject an institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalRequest'
+      responses:
+        '200':
+          description: Rejected institution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/{id}:
+    put:
+      tags: [Admin Institutions]
+      summary: Update institution details
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutionUpdateRequest'
+      responses:
+        '200':
+          description: Updated institution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/{id}/services:
+    post:
+      tags: [Admin Services]
+      summary: Create a service for an institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+      responses:
+        '201':
+          description: Created service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags: [Admin Services]
+      summary: List all services for an institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      responses:
+        '200':
+          description: Services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/services/{serviceId}:
+    put:
+      tags: [Admin Services]
+      summary: Update a service
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceUpdateRequest'
+      responses:
+        '200':
+          description: Updated service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags: [Admin Services]
+      summary: Delete a service
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdParam'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/{id}/time-slots:
+    get:
+      tags: [Admin Time Slots]
+      summary: List institution time slots
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Time slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeSlot'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags: [Admin Time Slots]
+      summary: Create one or more time slots
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TimeSlotRequest'
+      responses:
+        '201':
+          description: Created time slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeSlot'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/time-slots/{slotId}:
+    put:
+      tags: [Admin Time Slots]
+      summary: Update a time slot
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SlotIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSlotUpdateRequest'
+      responses:
+        '200':
+          description: Updated time slot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlot'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags: [Admin Time Slots]
+      summary: Delete a time slot
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SlotIdParam'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/institutions/{institutionId}/counters:
+    get:
+      tags: [Admin Counters]
+      summary: List counters for an institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InstitutionIdParam'
+      responses:
+        '200':
+          description: Counters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Counter'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags: [Admin Counters]
+      summary: Create a counter
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InstitutionIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterRequest'
+      responses:
+        '201':
+          description: Created counter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counter'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/counters/{id}:
+    put:
+      tags: [Admin Counters]
+      summary: Update a counter
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterUpdateRequest'
+      responses:
+        '200':
+          description: Updated counter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counter'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags: [Admin Counters]
+      summary: Delete a counter
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/appointments:
+    get:
+      tags: [Admin Appointments]
+      summary: List appointments or fetch one by filters
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: institutionId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: appointmentDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: customerPhone
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Appointment list or a single appointment when `id` is used
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+                  - $ref: '#/components/schemas/Appointment'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/appointments/{id}:
+    put:
+      tags: [Admin Appointments]
+      summary: Update an appointment
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentUpdateRequest'
+      responses:
+        '200':
+          description: Updated appointment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '409':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /api/admin/users:
+    get:
+      tags: [Admin Users]
+      summary: List users in the authenticated admin's institution
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Institution users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Admin Users]
+      summary: Create a staff or admin user in the authenticated admin's institution
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/users/{id}:
+    put:
+      tags: [Admin Users]
+      summary: Update a user in the authenticated admin's institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags: [Admin Users]
+      summary: Deactivate a user in the authenticated admin's institution
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UuidIdParam'
+      responses:
+        '204':
+          description: User deactivated
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    UuidIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    InstitutionIdParam:
+      name: institutionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ServiceIdParam:
+      name: serviceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    SlotIdParam:
+      name: slotId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    SlugParam:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Authenticated but not allowed to access the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+      example:
+        error: Institution not found
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required: [email, password]
+
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+      required: [refresh_token]
+
+    BootstrapAdminRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        password:
+          type: string
+          format: password
+        institutionId:
+          type: string
+          format: uuid
+      required: [email, password, institutionId]
+
+    CreateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        password:
+          type: string
+          format: password
+        active:
+          type: boolean
+      required: [email, full_name, role, password]
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        password:
+          type: string
+          format: password
+        active:
+          type: boolean
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        active:
+          type: boolean
+        institutionId:
+          type: string
+          format: uuid
+        institutionName:
+          type: string
+      required: [id, email, fullName, role, active, institutionId, institutionName]
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/AuthUser'
+      required: [accessToken, refreshToken, user]
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        institutionId:
+          type: string
+          format: uuid
+        institutionName:
+          type: string
+      required: [id, email, fullName, role, institutionId, institutionName]
+
+    InstitutionRegistrationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 120
+        slug:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+        type:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        logoUrl:
+          type: string
+        locationLat:
+          type: number
+        locationLng:
+          type: number
+      required: [name, slug, contactPhone]
+
+    InstitutionRegistrationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/InstitutionStatus'
+      required: [id, status]
+
+    InstitutionUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        logo_url:
+          type: string
+        is_active:
+          type: boolean
+
+    ApprovalRequest:
+      type: object
+      properties:
+        notes:
+          type: string
+
+    ServiceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          minimum: 1
+        prefix:
+          type: string
+        active:
+          type: boolean
+      required: [name, durationMinutes]
+
+    ServiceUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        duration_minutes:
+          type: integer
+        prefix:
+          type: string
+        is_active:
+          type: boolean
+
+    TimeSlotRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        capacity:
+          type: integer
+          minimum: 1
+      required: [date, startTime, endTime, capacity]
+
+    TimeSlotUpdateRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        capacity:
+          type: integer
+        is_blocked:
+          type: boolean
+        block_reason:
+          type: string
+
+    CounterRequest:
+      type: object
+      properties:
+        number:
+          type: string
+          maxLength: 50
+        staff_name:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+      required: [number]
+
+    CounterUpdateRequest:
+      type: object
+      properties:
+        number:
+          type: string
+        staff_name:
+          type: string
+        is_active:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/CounterStatus'
+        current_ticket:
+          type: string
+
+    AppointmentRequest:
+      type: object
+      properties:
+        institutionId:
+          type: string
+          format: uuid
+        serviceId:
+          type: string
+          format: uuid
+        timeSlotId:
+          type: string
+          format: uuid
+        customerPhone:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        appointmentDate:
+          type: string
+          format: date
+        appointmentTime:
+          type: string
+          format: time
+        ticketNumber:
+          type: string
+      required:
+        - institutionId
+        - serviceId
+        - timeSlotId
+        - customerPhone
+        - appointmentDate
+        - appointmentTime
+        - ticketNumber
+
+    AppointmentUpdateRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AppointmentStatus'
+        appointment_date:
+          type: string
+          format: date
+        appointment_time:
+          type: string
+          format: time
+        time_slot_id:
+          type: string
+          format: uuid
+        ticket_number:
+          type: string
+        customer_email:
+          type: string
+          format: email
+        customer_phone:
+          type: string
+        counter_number:
+          type: string
+        called_time:
+          type: string
+          format: date-time
+        completed_time:
+          type: string
+          format: date-time
+
+    AppointmentCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/AppointmentStatus'
+      required: [id, status]
+
+    PublicInstitutionPayload:
+      type: object
+      properties:
+        institution:
+          $ref: '#/components/schemas/Institution'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+        timeSlots:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+      required: [institution, services, timeSlots]
+
+    Institution:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        logoUrl:
+          type: string
+        locationLat:
+          type: number
+        locationLng:
+          type: number
+        status:
+          $ref: '#/components/schemas/InstitutionStatus'
+        active:
+          type: boolean
+        approvalNotes:
+          type: string
+        approvedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, name, slug, status, active]
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+        prefix:
+          type: string
+        active:
+          type: boolean
+      required: [id, name, durationMinutes, active]
+
+    TimeSlot:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        capacity:
+          type: integer
+        bookedCount:
+          type: integer
+        blocked:
+          type: boolean
+        blockReason:
+          type: string
+      required: [id, date, startTime, endTime, capacity, bookedCount, blocked]
+
+    Counter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        number:
+          type: string
+        staffName:
+          type: string
+        status:
+          $ref: '#/components/schemas/CounterStatus'
+        active:
+          type: boolean
+        currentTicket:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, number, status, active]
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerPhone:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        appointmentDate:
+          type: string
+          format: date
+        appointmentTime:
+          type: string
+          format: time
+        status:
+          $ref: '#/components/schemas/AppointmentStatus'
+        ticketNumber:
+          type: string
+        otpVerified:
+          type: boolean
+        counterNumber:
+          type: string
+        calledTime:
+          type: string
+          format: date-time
+        completedTime:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - appointmentDate
+        - appointmentTime
+        - status
+
+    InstitutionStatus:
+      type: string
+      enum: [PENDING, APPROVED, REJECTED]
+
+    CounterStatus:
+      type: string
+      enum: [AVAILABLE, BUSY, BREAK, CLOSED]
+
+    AppointmentStatus:
+      type: string
+      enum: [PENDING, CONFIRMED, WAITING, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW]
+
+    UserRole:
+      type: string
+      enum: [ADMIN, STAFF]
