@@ -1,0 +1,8 @@
+.env
+.m2repo
+.mvn
+target
+run*.log
+run*.out
+run*.err
+spring*.log
