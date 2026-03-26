@@ -137,6 +137,7 @@ export default function AdminLogin() {
               src="/RDV_transparent.png"
               alt="RDV.bi"
               className="h-14 w-auto object-contain sm:h-20"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
             />
           </Link>
           <LanguageSwitcher variant="outline" />

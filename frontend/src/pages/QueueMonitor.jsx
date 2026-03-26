@@ -151,7 +151,7 @@ export default function QueueMonitor() {
   return (
     <div className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 100%)' }}>
       {/* Header */}
-      <header className="border-b border-white/10 sticky top-0 z-10" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
+      <header className="sticky top-0 z-10" style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {institution.logo_url ? (
@@ -351,9 +351,14 @@ export default function QueueMonitor() {
           <Link
             to={createPageUrl('Home')}
             className="inline-flex items-center rounded-2xl px-2 py-1.5 hover:opacity-70 transition-opacity"
-            style={{ background: 'linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 100%)' }}
+            style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
           >
-            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-8 w-auto object-contain" />
+            <img
+              src="/RDV_transparent.png"
+              alt="RDV.bi"
+              className="h-8 w-auto object-contain"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            />
           </Link>
           {' · '}{copy.autoRefresh}
         </p>

@@ -224,24 +224,35 @@ export default function JoinPlatform() {
     <div className="min-h-screen" style={{ background: 'linear-gradient(150deg, #fff8f8 0%, #fff 40%, #f0fdf4 100%)' }}>
       {/* Header */}
       <header
-        className="fixed inset-x-0 top-0 z-30 border-b"
+        className="fixed inset-x-0 top-0 z-30"
         style={{
           background: 'rgba(255,255,255,0.58)',
-          borderColor: 'rgba(185,28,28,0.1)',
           boxShadow: '0 1px 30px rgba(185,28,28,0.05)',
           backdropFilter: 'blur(20px) saturate(140%)',
           WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         }}
       >
-        <div className="max-w-2xl mx-auto px-4 py-4 flex flex-wrap items-center gap-4">
-          <Link to={createPageUrl('Home')}>
-            <button className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.15)' }}>
-              <ChevronLeft className="w-4 h-4" style={{ color: C.red }} />
-            </button>
-          </Link>
-          <div className="flex items-center gap-2 rounded-2xl px-2 py-1.5" style={{ background: 'linear-gradient(150deg, #fff8f8 0%, #fff 40%, #f0fdf4 100%)' }}>
-            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-16 w-auto object-contain sm:h-20" />
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Link to={createPageUrl('Home')}>
+              <button
+                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.15)' }}
+              >
+                <ChevronLeft className="w-4 h-4" style={{ color: C.red }} />
+              </button>
+            </Link>
+            <div
+              className="flex items-center gap-2 rounded-2xl px-2 py-1.5"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            >
+              <img
+                src="/RDV_transparent.png"
+                alt="RDV.bi"
+                className="h-16 w-auto object-contain sm:h-20"
+                style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+              />
+            </div>
           </div>
           <span className="ml-auto text-sm font-medium" style={{ color: C.textMuted }}>{copy.joinInstitution}</span>
         </div>

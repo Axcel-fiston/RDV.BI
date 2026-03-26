@@ -77,15 +77,22 @@ export default function Home() {
           WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-12 w-auto object-contain sm:h-14" />
+            <img
+              src="/RDV_transparent.png"
+              alt="RDV.bi"
+              className="h-12 w-auto object-contain sm:h-14"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            />
           </div>
-          <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher variant="outline" />
             <Link to={createPageUrl('AdminLogin')}>
-              <button className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
-                style={{ background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.2)', color: C.red }}>
+              <button
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                style={{ background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.2)', color: C.red }}
+              >
                 {t('adminLogin')}
               </button>
             </Link>
@@ -215,15 +222,12 @@ export default function Home() {
         >
           <div className="grid gap-8 py-8 md:grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr] md:items-start">
             <div>
-              <Link
-                to={createPageUrl('Home')}
-                className="inline-flex items-center rounded-2xl px-2 py-2"
-                style={{ background: C.bg }}
-              >
+              <Link to={createPageUrl('Home')} className="inline-flex items-center" style={{ background: 'transparent' }}>
                 <img
                   src="/RDV_transparent.png"
                   alt="RDV.bi"
                   className="h-16 w-auto object-contain"
+                  style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
                 />
               </Link>
               <p className="mt-4 max-w-md text-sm leading-7" style={{ color: C.textMuted }}>

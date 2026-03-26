@@ -151,21 +151,25 @@ export default function Contact() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-6 md:px-8">
         <header
-          className="fixed inset-x-0 top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-4 md:px-8"
+          className="fixed inset-x-0 top-0 z-30 flex items-center justify-between gap-3 px-4 py-4 md:px-8"
           style={{
             background: 'rgba(255,255,255,0.58)',
-            borderColor: 'rgba(185,28,28,0.1)',
             boxShadow: '0 1px 40px rgba(185,28,28,0.05)',
             backdropFilter: 'blur(20px) saturate(140%)',
             WebkitBackdropFilter: 'blur(20px) saturate(140%)',
           }}
         >
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
-            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-12 w-auto object-contain sm:h-14" />
+            <img
+              src="/RDV_transparent.png"
+              alt="RDV.bi"
+              className="h-12 w-auto object-contain sm:h-14"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            />
           </Link>
           <Link
             to={createPageUrl('Home')}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70 sm:w-auto"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70"
             style={{ color: C.textMuted, background: 'rgba(255,255,255,0.66)' }}
           >
             <ArrowLeft className="w-4 h-4" />

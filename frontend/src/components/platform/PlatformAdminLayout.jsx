@@ -40,7 +40,12 @@ export default function PlatformAdminLayout({ children, user }) {
           <div className="border-b border-slate-100 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src="/RDV_transparent.png" alt="RDV.bi" className="h-14 w-auto object-contain" />
+                <img
+                  src="/RDV_transparent.png"
+                  alt="RDV.bi"
+                  className="h-14 w-auto object-contain"
+                  style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+                />
                 <div>
                   <p className="font-semibold text-slate-900">RDV.bi</p>
                   <p className="text-xs text-slate-500">{copy.platformAdmin}</p>

@@ -34,7 +34,7 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-6 md:px-8">
         <header
-          className="fixed inset-x-0 top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-4 md:px-8"
+          className="fixed inset-x-0 top-0 z-30 flex items-center justify-between gap-3 border-b px-4 py-4 md:px-8"
           style={{
             background: 'rgba(255,255,255,0.58)',
             borderColor: 'rgba(185,28,28,0.1)',
@@ -44,7 +44,12 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
           }}
         >
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
-            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-14 w-auto object-contain" />
+            <img
+              src="/RDV_transparent.png"
+              alt="RDV.bi"
+              className="h-14 w-auto object-contain"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            />
           </Link>
           <Link
             to={createPageUrl('Home')}

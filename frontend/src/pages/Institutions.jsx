@@ -53,15 +53,14 @@ export default function Institutions() {
 
             {/* Header */}
             <header
-                className="fixed inset-x-0 top-0 z-30 border-b"
+                className="fixed inset-x-0 top-0 z-30"
                 style={{
                     background: 'rgba(255,255,255,0.58)',
-                    borderColor: 'rgba(185,28,28,0.1)',
                     boxShadow: '0 1px 30px rgba(185,28,28,0.05)',
                     backdropFilter: 'blur(20px) saturate(140%)',
                     WebkitBackdropFilter: 'blur(20px) saturate(140%)',
                 }}>
-                <div className="max-w-4xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <Link to={createPageUrl('Home')}>
                             <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-all border"
@@ -69,11 +68,16 @@ export default function Institutions() {
                                 <ChevronLeft className="w-4 h-4" style={{ color: C.red }} />
                             </button>
                         </Link>
-                        <div className="flex items-center gap-2">
-                            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-16 w-auto object-contain sm:h-20" />
-                        </div>
+                        <img
+                            src="/RDV_transparent.png"
+                            alt="RDV.bi"
+                            className="h-16 w-auto object-contain sm:h-20"
+                            style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+                        />
                     </div>
-                    <LanguageSwitcher variant="outline" />
+                    <div className="flex items-center gap-2">
+                        <LanguageSwitcher variant="outline" />
+                    </div>
                 </div>
             </header>
 

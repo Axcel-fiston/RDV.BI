@@ -98,8 +98,8 @@ export default function MyAppointments() {
             </div>
 
             {/* Header */}
-            <header className="relative z-10 sticky top-0 border-b backdrop-blur-2xl"
-                style={{ background: 'rgba(255,255,255,0.8)', borderColor: 'rgba(185,28,28,0.1)', boxShadow: '0 1px 30px rgba(185,28,28,0.05)' }}>
+            <header className="relative z-10 sticky top-0 backdrop-blur-2xl"
+                style={{ background: 'rgba(255,255,255,0.8)', boxShadow: '0 1px 30px rgba(185,28,28,0.05)' }}>
                 <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
                     <Link to={createPageUrl('Home')}>
                         <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-all"
@@ -108,9 +108,17 @@ export default function MyAppointments() {
                         </button>
                     </Link>
                     <div className="flex items-center gap-2 flex-1">
-                        <div className="inline-flex items-center rounded-2xl px-2 py-1.5" style={{ background: C.bg }}>
-                            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-12 w-auto object-contain" />
-                        </div>
+                    <div
+                        className="inline-flex items-center rounded-2xl px-2 py-1.5"
+                        style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+                    >
+                        <img
+                            src="/RDV_transparent.png"
+                            alt="RDV.bi"
+                            className="h-12 w-auto object-contain"
+                            style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+                        />
+                    </div>
                     </div>
                     <LanguageSwitcher variant="outline" />
                 </div>

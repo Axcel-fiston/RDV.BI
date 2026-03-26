@@ -63,7 +63,12 @@ export default function Sidebar({ institution, user, open, onClose }) {
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src="/RDV_transparent.png" alt="RDV.bi" className="h-14 w-auto object-contain" />
+                <img
+                  src="/RDV_transparent.png"
+                  alt="RDV.bi"
+                  className="h-14 w-auto object-contain"
+                  style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+                />
                 <div>
                   <h1 className="font-bold text-[#1e3a5f]">RDV.bi</h1>
                   <p className="text-xs text-gray-500">{isPlatformAdmin ? copy.platformAdmin : copy.adminDashboard}</p>
