@@ -148,8 +148,6 @@ export default function Contact() {
           className="absolute top-[18%] left-[38%] w-[420px] h-[420px] rounded-full"
           style={{ background: 'radial-gradient(circle, rgba(212,175,106,0.08) 0%, transparent 70%)' }}
         />
-        </main>
-        <PublicFooter />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-6 md:px-8">
@@ -399,6 +397,7 @@ export default function Contact() {
             </section>
           </div>
         </main>
+        <PublicFooter />
       </div>
     </div>
   );
