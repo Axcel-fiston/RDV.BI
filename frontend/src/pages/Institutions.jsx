@@ -41,143 +41,151 @@ export default function Institutions() {
     });
 
     return (
-        <div className="min-h-screen" style={{ background: C.bg }}>
-            {/* Ambient */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full"
-                    style={{ background: 'radial-gradient(circle, rgba(185,28,28,0.07) 0%, transparent 70%)' }} />
-                <div className="absolute bottom-[-5%] right-[-5%] w-[450px] h-[450px] rounded-full"
-                    style={{ background: 'radial-gradient(circle, rgba(21,128,61,0.07) 0%, transparent 70%)' }} />
-                <div className="absolute top-0 left-0 w-full h-full opacity-25"
-                    style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.7) 50%, transparent 60%)' }} />
-            </div>
+  <>
+    <div className="min-h-screen" style={{ background: C.bg }}>
+      {/* Ambient */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div
+          className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(185,28,28,0.07) 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute bottom-[-5%] right-[-5%] w-[450px] h-[450px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(21,128,61,0.07) 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute top-0 left-0 w-full h-full opacity-25"
+          style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.7) 50%, transparent 60%)' }}
+        />
+      </div>
 
-            {/* Header */}
-            <header
-                className="fixed inset-x-0 top-0 z-30"
-                style={{
-                    background: 'rgba(255,255,255,0.58)',
-                    boxShadow: '0 1px 30px rgba(185,28,28,0.05)',
-                    backdropFilter: 'blur(20px) saturate(140%)',
-                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-                }}>
-                <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                        <Link to={createPageUrl('Home')}>
-                            <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-all border"
-                                style={{ background: 'rgba(185,28,28,0.08)', borderColor: 'rgba(185,28,28,0.15)' }}>
-                                <ChevronLeft className="w-4 h-4" style={{ color: C.red }} />
-                            </button>
-                        </Link>
-                        <img
-                            src="/RDV_transparent.png"
-                            alt="RDV.bi"
-                            className="h-16 w-auto object-contain sm:h-20"
-                            style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
-                        />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <LanguageSwitcher variant="outline" />
-                    </div>
-                </div>
-            </header>
+      {/* Header */}
+      <header
+        className="fixed inset-x-0 top-0 z-30"
+        style={{
+          background: 'rgba(255,255,255,0.58)',
+          boxShadow: '0 1px 30px rgba(185,28,28,0.05)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+        }}
+      >
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Link to={createPageUrl('Home')}>
+              <button
+                className="w-9 h-9 rounded-xl flex items-center justify-center transition-all border"
+                style={{ background: 'rgba(185,28,28,0.08)', borderColor: 'rgba(185,28,28,0.15)' }}
+              >
+                <ChevronLeft className="w-4 h-4" style={{ color: C.red }} />
+              </button>
+            </Link>
 
-            <div className="relative z-10 max-w-4xl mx-auto px-4 py-32">
-                <div className="mb-10 text-center">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.text }}>{t('findInstitution')}</h1>
-                    <p className="text-sm" style={{ color: C.textMuted }}>{t('bookAtOrgs')}</p>
-                </div>
+            <img
+              src="/RDV_transparent.png"
+              alt="RDV.bi"
+              className="h-16 w-auto object-contain sm:h-20"
+              style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
+            />
+          </div>
 
-                {/* Search & Filter */}
-                <div className="rounded-2xl p-4 mb-6 space-y-3"
-                    style={{ background: C.cardBg, border: `1px solid ${C.cardBorder}`, backdropFilter: 'blur(30px)', boxShadow: '0 4px 30px rgba(185,28,28,0.06), inset 0 1px 0 rgba(255,255,255,1)' }}>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: C.textMuted }} />
-                        <input
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder={t('searchPlaceholder')}
-                            className="w-full h-11 pl-10 pr-4 rounded-xl text-sm outline-none transition-all"
-                            style={{ background: 'rgba(185,28,28,0.04)', border: '1px solid rgba(185,28,28,0.12)', color: C.text }}
-                            onFocus={e => e.target.style.borderColor = `rgba(21,128,61,0.35)`}
-                            onBlur={e => e.target.style.borderColor = 'rgba(185,28,28,0.12)'}
-                        />
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {types.map((type) => (
-                            <button key={type} onClick={() => setTypeFilter(type)}
-                                className="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200"
-                                style={typeFilter === type ? {
-                                    background: `linear-gradient(135deg, ${C.red}, ${C.green})`,
-                                    color: 'white',
-                                    boxShadow: '0 4px 15px rgba(185,28,28,0.3)'
-                                } : {
-                                    background: 'rgba(185,28,28,0.05)',
-                                    border: '1px solid rgba(185,28,28,0.14)',
-                                    color: C.textMuted
-                                }}>
-                                {type === 'all' ? t('allTypes') : `${TYPE_ICONS[type]} ${t(type)}`}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {!isLoading && (
-                    <p className="text-xs mb-4" style={{ color: C.textMuted }}>
-                        {filtered.length} {t('institutions').toLowerCase()}{search ? ` · "${search}"` : ''}
-                    </p>
-                )}
-
-                {isLoading ? (
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        {[1, 2, 3, 4].map(i => (
-                            <div key={i} className="h-24 rounded-2xl animate-pulse" style={{ background: 'rgba(185,28,28,0.05)' }} />
-                        ))}
-                    </div>
-                ) : filtered.length > 0 ? (
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        {filtered.map((institution) => (
-                            <Link key={institution.id} to={`/institutions/${institution.slug}`}>
-                                <div className="group rounded-2xl p-5 cursor-pointer transition-transform duration-300 h-full hover:-translate-y-0.5 hover:shadow-xl"
-                                    style={{ background: C.cardBg, border: `1px solid ${C.cardBorder}`, backdropFilter: 'blur(30px)', boxShadow: '0 4px 25px rgba(185,28,28,0.05), inset 0 1px 0 rgba(255,255,255,1)' }}>
-                                    <div className="flex items-center gap-4">
-                                        {institution.logo_url ? (
-                                            <img src={institution.logo_url} alt={institution.name}
-                                                className="w-12 h-12 rounded-xl object-cover flex-shrink-0" />
-                                        ) : (
-                                            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl"
-                                                style={{ background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.12)' }}>
-                                                {TYPE_ICONS[institution.type] || '🏢'}
-                                            </div>
-                                        )}
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="font-semibold truncate" style={{ color: C.text }}>{institution.name}</h3>
-                                            <span className="inline-block text-xs px-2 py-0.5 rounded-full mt-1 capitalize"
-                                                style={{ background: 'rgba(21,128,61,0.08)', color: C.green, border: '1px solid rgba(21,128,61,0.18)' }}>
-                                                {t(institution.type) || institution.type}
-                                            </span>
-                                            {institution.address && (
-                                                <p className="text-xs mt-1 truncate" style={{ color: C.textMuted }}>{institution.address}</p>
-                                            )}
-                                        </div>
-                                        <ArrowRight className="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-1"
-                                            style={{ color: 'rgba(185,28,28,0.3)' }} />
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-16">
-                        <Building2 className="w-10 h-10 mx-auto mb-3" style={{ color: 'rgba(185,28,28,0.2)' }} />
-                        <p className="font-medium" style={{ color: C.textMuted }}>{t('noResults')}</p>
-                        <p className="text-sm mt-1" style={{ color: 'rgba(107,42,42,0.5)' }}>{t('tryDifferent')}</p>
-                    </div>
-                )}
-            </div>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="outline" />
+          </div>
         </div>
-        <PublicFooter />
+      </header>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 py-32">
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.text }}>
+            {t('findInstitution')}
+          </h1>
+          <p className="text-sm" style={{ color: C.textMuted }}>
+            {t('bookAtOrgs')}
+          </p>
+        </div>
+
+        {/* Search & Filter */}
+        <div
+          className="rounded-2xl p-4 mb-6 space-y-3"
+          style={{
+            background: C.cardBg,
+            border: `1px solid ${C.cardBorder}`,
+            backdropFilter: 'blur(30px)',
+            boxShadow: '0 4px 30px rgba(185,28,28,0.06), inset 0 1px 0 rgba(255,255,255,1)',
+          }}
+        >
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+              style={{ color: C.textMuted }}
+            />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t('searchPlaceholder')}
+              className="w-full h-11 pl-10 pr-4 rounded-xl text-sm outline-none transition-all"
+              style={{
+                background: 'rgba(185,28,28,0.04)',
+                border: '1px solid rgba(185,28,28,0.12)',
+                color: C.text,
+              }}
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {types.map((type) => (
+              <button
+                key={type}
+                onClick={() => setTypeFilter(type)}
+                className="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200"
+                style={
+                  typeFilter === type
+                    ? {
+                        background: `linear-gradient(135deg, ${C.red}, ${C.green})`,
+                        color: 'white',
+                      }
+                    : {
+                        background: 'rgba(185,28,28,0.05)',
+                        border: '1px solid rgba(185,28,28,0.14)',
+                        color: C.textMuted,
+                      }
+                }
+              >
+                {type === 'all' ? t('allTypes') : `${TYPE_ICONS[type]} ${t(type)}`}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results */}
+        {isLoading ? (
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 rounded-2xl animate-pulse" style={{ background: 'rgba(185,28,28,0.05)' }} />
+            ))}
+          </div>
+        ) : filtered.length > 0 ? (
+          <div className="grid sm:grid-cols-2 gap-4">
+            {filtered.map((institution) => (
+              <Link key={institution.id} to={`/institutions/${institution.slug}`}>
+                <div className="rounded-2xl p-5 cursor-pointer">
+                  <h3>{institution.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p>{t('noResults')}</p>
+          </div>
+        )}
+      </div>
     </div>
-    );
+
+    {/* ✅ Footer now outside main container but inside fragment */}
+    <PublicFooter />
+  </>
+);
 }
 
