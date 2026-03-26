@@ -69,7 +69,14 @@ export default function Sidebar({ institution, user, open, onClose }) {
                     className="h-14 w-auto object-contain"
                     style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
                   />
-                  <span className="sr-only">RDV.bi</span>
+                  <div>
+                    <p className="font-bold text-[#1e3a5f] text-base">
+                      {institution?.name || 'Institution'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {isPlatformAdmin ? copy.platformAdmin : copy.adminDashboard}
+                    </p>
+                  </div>
                 </div>
               <Button 
                 variant="ghost" 
