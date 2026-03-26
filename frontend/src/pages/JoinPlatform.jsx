@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/components/LanguageContext';
+import PublicFooter from '@/components/PublicFooter';
 
 const C = {
   red: '#b91c1c', green: '#15803d', gold: '#d4af6a',
@@ -508,6 +509,7 @@ export default function JoinPlatform() {
           )}
         </div>
       </div>
+      <PublicFooter />
     </div>
   );
 }
