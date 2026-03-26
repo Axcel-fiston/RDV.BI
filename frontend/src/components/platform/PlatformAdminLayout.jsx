@@ -37,7 +37,7 @@ export default function PlatformAdminLayout({ children, user }) {
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="border-b border-slate-100 p-6 bg-white/40 backdrop-blur-xl">
+          <div className="border-b border-slate-100 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
@@ -46,12 +46,7 @@ export default function PlatformAdminLayout({ children, user }) {
                   className="h-14 w-auto object-contain"
                   style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
                 />
-                <div>
-                  <p className="font-semibold text-slate-900">
-                    {institution?.name || 'RDV Institution'}
-                  </p>
-                  <p className="text-xs text-slate-500">{copy.platformAdmin}</p>
-                </div>
+                <span className="sr-only">RDV.bi</span>
               </div>
               <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(false)}>
                 <X className="h-5 w-5" />
