@@ -46,10 +46,7 @@ export default function PlatformAdminLayout({ children, user }) {
                   className="h-14 w-auto object-contain"
                   style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}
                 />
-                <div>
-                  <p className="font-semibold text-slate-900">RDV.bi</p>
-                  <p className="text-xs text-slate-500">{copy.platformAdmin}</p>
-                </div>
+                <span className="sr-only">RDV.bi</span>
               </div>
               <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(false)}>
                 <X className="h-5 w-5" />

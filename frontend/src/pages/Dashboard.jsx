@@ -63,55 +63,65 @@ function DashboardContent({ institution }) {
       cancelled: 'bg-red-100 text-red-800',
       no_show: 'bg-gray-100 text-gray-800'
     };
-    return styles[status] || 'bg-gray-100 text-gray-800';
+    return `inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold capitalize ${styles[status] || 'bg-gray-100 text-gray-800'}`;
   };
+
+  const mobileAppointments = todayAppointments.slice(0, 4);
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {user?.role === 'STAFF' ? 'Staff Dashboard' : t('dashboard')}
-        </h1>
-        <p className="text-gray-500 mt-1">{t('welcomeBack') || "Welcome back! Here's what's happening today."}</p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title={t('todayAppointments') || "Today's Appointments"} value={todayAppointments.length} icon={Calendar} />
-        <StatCard title={t('customersWaiting') || "Customers Waiting"} value={waiting} icon={Users} />
-        <StatCard title={t('avgWaitTime') || "Avg. Wait Time"} value={`${avgWaitTime} min`} icon={Clock} />
-        <StatCard title={t('activeCounters') || "Active Counters"} value={activeCounters} icon={Monitor} />
+      {/* Hero stats */}
+      <div className="rounded-[2rem] border border-white/60 bg-gradient-to-br from-white via-[#fff8f2] to-[#f5f0eb] p-6 shadow-[0_35px_100px_rgba(30,58,95,0.18)] backdrop-blur-xl">
+        <div>
+          <h1 className="text-3xl font-semibold text-[#1e3a5f]">
+            {user?.role === 'STAFF' ? 'Staff Dashboard' : t('dashboard')}
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">
+            {t('welcomeBack') || "Welcome back! Here's what's happening today."}
+          </p>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            title={t('todayAppointments') || "Today's Appointments"}
+            value={todayAppointments.length}
+            icon={Calendar}
+          />
+          <StatCard title={t('customersWaiting') || 'Customers Waiting'} value={waiting} icon={Users} />
+          <StatCard title={t('avgWaitTime') || 'Avg. Wait Time'} value={`${avgWaitTime} min`} icon={Clock} />
+          <StatCard title={t('activeCounters') || 'Active Counters'} value={activeCounters} icon={Monitor} />
+        </div>
       </div>
 
       {/* Charts */}
-      <DashboardCharts institution={institution} />
+      <div className="rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_80px_rgba(30,58,95,0.15)] p-5 backdrop-blur-xl">
+        <DashboardCharts institution={institution} />
+      </div>
 
       {/* Recent Appointments */}
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-[0_25px_60px_rgba(30,58,95,0.12)]">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Recent Appointments</CardTitle>
+          <CardTitle className="text-lg text-[#1e3a5f]">Recent Appointments</CardTitle>
           <Link to={createPageUrl('Appointments')}>
-            <Button variant="ghost" size="sm">
+            <Button variant="outline" size="sm">
               View All <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </Link>
         </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
+        <CardContent className="space-y-6">
+          <div className="overflow-x-auto hidden sm:block">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Ticket</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Service</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Phone</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Time</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Status</th>
+                  <th className="text-left py-3 px-4 text-xs tracking-[0.2em] uppercase text-slate-400">Ticket</th>
+                  <th className="text-left py-3 px-4 text-xs tracking-[0.2em] uppercase text-slate-400">Service</th>
+                  <th className="text-left py-3 px-4 text-xs tracking-[0.2em] uppercase text-slate-400">Phone</th>
+                  <th className="text-left py-3 px-4 text-xs tracking-[0.2em] uppercase text-slate-400">Time</th>
+                  <th className="text-left py-3 px-4 text-xs tracking-[0.2em] uppercase text-slate-400">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {todayAppointments.slice(0, 5).map((apt) => (
-                  <tr key={apt.id} className="border-b border-gray-50 hover:bg-gray-50">
+                  <tr key={apt.id} className="border-b border-gray-50 hover:bg-slate-50 transition-colors">
                     <td className="py-3 px-4">
                       <span className="font-semibold text-[#1e3a5f]">{apt.ticket_number}</span>
                     </td>
@@ -119,9 +129,7 @@ function DashboardContent({ institution }) {
                     <td className="py-3 px-4 text-gray-600">{apt.customer_phone}</td>
                     <td className="py-3 px-4 text-gray-600">{apt.appointment_time}</td>
                     <td className="py-3 px-4">
-                      <Badge className={getStatusBadge(apt.status)}>
-                        {apt.status}
-                      </Badge>
+                      <Badge className={getStatusBadge(apt.status)}>{apt.status}</Badge>
                     </td>
                   </tr>
                 ))}
@@ -135,43 +143,71 @@ function DashboardContent({ institution }) {
               </tbody>
             </table>
           </div>
+          <div className="space-y-4 sm:hidden">
+            {mobileAppointments.length > 0 ? (
+              mobileAppointments.map((apt) => (
+                <div
+                  key={apt.id}
+                  className="rounded-2xl border border-white/50 bg-white/70 shadow-[0_15px_35px_rgba(30,58,95,0.15)] p-4 space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a4d]">Ticket</p>
+                      <p className="text-lg font-semibold text-[#1e3a5f]">{apt.ticket_number}</p>
+                    </div>
+                    <Badge className={getStatusBadge(apt.status)}>{apt.status}</Badge>
+                  </div>
+                  <p className="text-sm text-slate-600">{getServiceName(apt.service_id)}</p>
+                  <div className="flex items-center justify-between text-sm text-slate-500">
+                    <span>{apt.customer_phone || '—'}</span>
+                    <span>{apt.appointment_time || '—'}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-white/60 bg-white/60 py-8 text-center text-sm text-slate-500">
+                No appointments today
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
       {/* Counter Status */}
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-[0_25px_60px_rgba(30,58,95,0.12)]">
         <CardHeader>
-          <CardTitle className="text-lg">Counter Status</CardTitle>
+          <CardTitle className="text-lg text-[#1e3a5f]">Counter Status</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {counters.map((counter) => (
               <div
                 key={counter.id}
-                className="p-4 rounded-xl border border-gray-100 bg-white"
+                className="p-4 rounded-2xl border border-white/50 bg-gradient-to-br from-white to-[#f8f6f2] shadow-[0_20px_40px_rgba(30,58,95,0.12)]"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-gray-900">Counter {counter.number}</span>
-                  <Badge className={
-                    counter.status === 'available' ? 'bg-green-100 text-green-800' :
-                      counter.status === 'busy' ? 'bg-orange-100 text-orange-800' :
-                        counter.status === 'break' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
-                  }>
+                  <span className="text-sm font-semibold text-[#1e3a5f]">Counter {counter.number}</span>
+                  <Badge
+                    className={`text-[11px] px-3 py-1 font-semibold rounded-full capitalize ${
+                      counter.status === 'available'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : counter.status === 'busy'
+                          ? 'bg-orange-100 text-orange-700'
+                          : counter.status === 'break'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
                     {counter.status}
                   </Badge>
                 </div>
-                {counter.staff_name && (
-                  <p className="text-sm text-gray-500">{counter.staff_name}</p>
-                )}
+                {counter.staff_name && <p className="text-sm text-slate-500">{counter.staff_name}</p>}
                 {counter.current_ticket && (
-                  <p className="text-sm text-[#1e3a5f] font-medium mt-1">
-                    Serving: {counter.current_ticket}
-                  </p>
+                  <p className="text-sm text-[#1e3a5f] font-semibold mt-1">Serving: {counter.current_ticket}</p>
                 )}
               </div>
             ))}
-            {counters.length === 0 && (
+            {!counters.length && (
               <p className="text-gray-500 col-span-full text-center py-4">
                 No counters configured
               </p>
