@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Building2, Search, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
+import PublicFooter from '@/components/PublicFooter';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const TYPE_ICONS = {
@@ -175,6 +176,8 @@ export default function Institutions() {
                 )}
             </div>
         </div>
+        <PublicFooter />
+    </div>
     );
 }
 

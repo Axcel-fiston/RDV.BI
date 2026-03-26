@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
+import PublicFooter from '@/components/PublicFooter';
 
 const C = {
   red: '#b91c1c',
@@ -98,6 +99,7 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
             ))}
           </div>
         </main>
+        <PublicFooter />
       </div>
     </div>
   );
