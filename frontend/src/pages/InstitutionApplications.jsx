@@ -15,6 +15,7 @@ import PlatformAdminLayout from '@/components/platform/PlatformAdminLayout';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { api } from '@/api/apiClient';
+import { useLanguage } from '@/components/LanguageContext';
 
 const TYPE_ICONS = { bank:'🏦', hospital:'🏥', insurance:'🛡️', government:'🏛️', utility:'⚡', other:'🏢' };
 
@@ -24,7 +25,7 @@ const STATUS_STYLES = {
   rejected: { badge: 'bg-red-100 text-red-800', icon: XCircle },
 };
 
-function ApplicationCard({ app, onAction }) {
+function ApplicationCard({ app, onAction, copy }) {
   const [expanded, setExpanded] = useState(false);
   const { badge, icon: StatusIcon } = STATUS_STYLES[app.status] || STATUS_STYLES.pending;
 
@@ -71,10 +72,10 @@ function ApplicationCard({ app, onAction }) {
           <div className="px-5 pb-5 border-t border-gray-50 pt-4 space-y-4">
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
               {[
-                { icon: User, label: 'Admin', value: `${app.admin_name || '—'}${app.admin_email ? ` · ${app.admin_email}` : ''}` },
-                { icon: MapPin, label: 'Address', value: app.address || '—' },
-                { icon: Mail, label: 'Institution Email', value: app.contact_email || '—' },
-                { icon: Phone, label: 'Institution Phone', value: app.contact_phone || '—' },
+                { icon: User, label: copy.admin, value: `${app.admin_name || '—'}${app.admin_email ? ` · ${app.admin_email}` : ''}` },
+                { icon: MapPin, label: copy.address, value: app.address || '—' },
+                { icon: Mail, label: copy.institutionEmail, value: app.contact_email || '—' },
+                { icon: Phone, label: copy.institutionPhone, value: app.contact_phone || '—' },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-2">
                   <Icon className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
@@ -87,17 +88,17 @@ function ApplicationCard({ app, onAction }) {
             </div>
             {app.description && (
               <div className="bg-gray-50 rounded-xl p-3">
-                <p className="text-xs text-gray-400 mb-1">Description</p>
+                <p className="text-xs text-gray-400 mb-1">{copy.description}</p>
                 <p className="text-sm text-gray-700">{app.description}</p>
               </div>
             )}
             {app.rejection_reason && (
               <div className="bg-red-50 rounded-xl p-3 border border-red-100">
-                <p className="text-xs text-red-500 mb-1">Rejection Reason</p>
+                <p className="text-xs text-red-500 mb-1">{copy.rejectionReason}</p>
                 <p className="text-sm text-red-700">{app.rejection_reason}</p>
               </div>
             )}
-            <p className="text-xs text-gray-400">Applied {app.created_date ? format(new Date(app.created_date), 'MMM d, yyyy') : '—'}</p>
+            <p className="text-xs text-gray-400">{copy.applied} {app.created_date ? format(new Date(app.created_date), 'MMM d, yyyy') : '—'}</p>
           </div>
         )}
 
@@ -105,11 +106,11 @@ function ApplicationCard({ app, onAction }) {
           <div className="flex gap-2 px-5 pb-5">
             <Button onClick={() => onAction(app, 'approve')}
               className="flex-1 bg-green-600 hover:bg-green-700 text-white h-9">
-              <CheckCircle2 className="w-4 h-4 mr-2" /> Approve
+              <CheckCircle2 className="w-4 h-4 mr-2" /> {copy.approve}
             </Button>
             <Button variant="outline" onClick={() => onAction(app, 'reject')}
               className="flex-1 border-red-200 text-red-600 hover:bg-red-50 h-9">
-              <XCircle className="w-4 h-4 mr-2" /> Reject
+              <XCircle className="w-4 h-4 mr-2" /> {copy.reject}
             </Button>
           </div>
         )}
@@ -119,9 +120,99 @@ function ApplicationCard({ app, onAction }) {
 }
 
 function ApplicationsContent() {
+  const { lang } = useLanguage();
   const queryClient = useQueryClient();
   const [actionTarget, setActionTarget] = useState(null); // { app, type }
   const [rejectionReason, setRejectionReason] = useState('');
+  const copy = lang === 'fr'
+    ? {
+        institutionApplications: "Demandes d institutions",
+        loadingApplications: 'Chargement des demandes...',
+        fetchingApplications: "Recuperation des demandes d institution depuis l API d administration.",
+        unableToLoad: "Impossible de charger les donnees de revue de la plateforme",
+        apiError: "Erreur de l API d administration",
+        unknownError: 'Erreur inconnue',
+        apiHelp: "Cette page necessite une session PLATFORM_ADMIN valide et une requete reussie vers",
+        reviewApprove: "Examinez et approuvez les nouvelles inscriptions d institutions",
+        pendingCount: 'en attente',
+        pending: 'En attente',
+        approved: 'Approuvees',
+        rejected: 'Rejetees',
+        noApplications: 'Aucune demande',
+        admin: 'Admin',
+        address: 'Adresse',
+        institutionEmail: "E-mail de l institution",
+        institutionPhone: "Telephone de l institution",
+        description: 'Description',
+        rejectionReason: 'Motif du rejet',
+        applied: 'Soumise le',
+        approve: 'Approuver',
+        reject: 'Rejeter',
+        approveTitle: 'Approuver la demande',
+        approveText: 'Approuver',
+        approveWill: 'entrainera :',
+        approveItems: [
+          'La creation d une page institution active',
+          `La publication sur /PublicBooking?slug=${actionTarget?.app?.slug}`,
+          'L envoi d un e-mail de confirmation au demandeur',
+        ],
+        cancel: 'Annuler',
+        approving: 'Approbation...',
+        confirmApprove: 'Confirmer',
+        rejectTitle: 'Rejeter la demande',
+        rejectText: 'Vous rejetez',
+        rejectOptional: 'Vous pouvez indiquer un motif :',
+        rejectPlaceholder: 'Motif du rejet (optionnel, conserve en interne)...',
+        confirmReject: 'Confirmer le rejet',
+        toastApproved: 'Institution approuvee',
+        toastApproveError: "Impossible d approuver l institution",
+        toastRejected: 'Demande rejetee',
+        toastRejectError: "Impossible de rejeter l institution",
+      }
+    : {
+        institutionApplications: 'Institution Applications',
+        loadingApplications: 'Loading applications...',
+        fetchingApplications: 'Fetching institution applications from the platform admin API.',
+        unableToLoad: 'Unable to load platform review data',
+        apiError: 'Platform admin API error',
+        unknownError: 'Unknown error',
+        apiHelp: 'This page requires a valid PLATFORM_ADMIN session and a successful request to',
+        reviewApprove: 'Review and approve new institution registrations',
+        pendingCount: 'pending',
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        noApplications: 'No applications',
+        admin: 'Admin',
+        address: 'Address',
+        institutionEmail: 'Institution Email',
+        institutionPhone: 'Institution Phone',
+        description: 'Description',
+        rejectionReason: 'Rejection Reason',
+        applied: 'Applied',
+        approve: 'Approve',
+        reject: 'Reject',
+        approveTitle: 'Approve Application',
+        approveText: 'Approving',
+        approveWill: 'will:',
+        approveItems: [
+          'Create a live institution page',
+          `Publish at /PublicBooking?slug=${actionTarget?.app?.slug}`,
+          'Send a confirmation email to the applicant',
+        ],
+        cancel: 'Cancel',
+        approving: 'Approving...',
+        confirmApprove: 'Confirm Approve',
+        rejectTitle: 'Reject Application',
+        rejectText: 'Rejecting',
+        rejectOptional: 'Optionally provide a reason:',
+        rejectPlaceholder: 'Reason for rejection (optional, will be stored internally)...',
+        confirmReject: 'Confirm Reject',
+        toastApproved: 'Institution approved',
+        toastApproveError: 'Failed to approve institution',
+        toastRejected: 'Application rejected',
+        toastRejectError: 'Failed to reject institution',
+      };
 
   const { data: applications = [], isLoading, error } = useQuery({
     queryKey: ['applications'],
@@ -132,11 +223,11 @@ function ApplicationsContent() {
     mutationFn: ({ id, notes }) => api.entities.Institution.approve(id, notes),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
-      toast.success('Institution approved');
+      toast.success(copy.toastApproved);
       setActionTarget(null);
     },
     onError: (error) => {
-      toast.error(error?.message || 'Failed to approve institution');
+      toast.error(error?.message || copy.toastApproveError);
     }
   });
 
@@ -144,12 +235,12 @@ function ApplicationsContent() {
     mutationFn: ({ id, notes }) => api.entities.Institution.reject(id, notes),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
-      toast.success('Application rejected');
+      toast.success(copy.toastRejected);
       setActionTarget(null);
       setRejectionReason('');
     },
     onError: (error) => {
-      toast.error(error?.message || 'Failed to reject institution');
+      toast.error(error?.message || copy.toastRejectError);
     }
   });
 
@@ -183,11 +274,11 @@ function ApplicationsContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Institution Applications</h1>
-          <p className="text-gray-500 mt-1">Loading applications...</p>
+          <h1 className="text-2xl font-bold text-gray-900">{copy.institutionApplications}</h1>
+          <p className="text-gray-500 mt-1">{copy.loadingApplications}</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-6 text-gray-500">
-          Fetching institution applications from the platform admin API.
+          {copy.fetchingApplications}
         </div>
       </div>
     );
@@ -197,14 +288,14 @@ function ApplicationsContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Institution Applications</h1>
-          <p className="text-gray-500 mt-1">Unable to load platform review data</p>
+          <h1 className="text-2xl font-bold text-gray-900">{copy.institutionApplications}</h1>
+          <p className="text-gray-500 mt-1">{copy.unableToLoad}</p>
         </div>
         <div className="rounded-xl border border-red-200 bg-red-50 p-5">
-          <p className="text-sm font-semibold text-red-700">Platform admin API error</p>
-          <p className="mt-1 text-sm text-red-600">{error.message || 'Unknown error'}</p>
+          <p className="text-sm font-semibold text-red-700">{copy.apiError}</p>
+          <p className="mt-1 text-sm text-red-600">{error.message || copy.unknownError}</p>
           <p className="mt-3 text-xs text-red-500">
-            This page requires a valid PLATFORM_ADMIN session and a successful request to <code>/api/admin/institutions</code>.
+            {copy.apiHelp} <code>/api/admin/institutions</code>.
           </p>
         </div>
       </div>
@@ -215,12 +306,12 @@ function ApplicationsContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Institution Applications</h1>
-          <p className="text-gray-500 mt-1">Review and approve new institution registrations</p>
+          <h1 className="text-2xl font-bold text-gray-900">{copy.institutionApplications}</h1>
+          <p className="text-gray-500 mt-1">{copy.reviewApprove}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium">
-            {pending.length} pending
+            {pending.length} {copy.pendingCount}
           </div>
         </div>
       </div>
@@ -228,9 +319,9 @@ function ApplicationsContent() {
       {/* Stats */}
       <div className="grid sm:grid-cols-3 gap-4">
         {[
-          { label: 'Pending', value: pending.length, color: 'bg-amber-50', textColor: 'text-amber-700' },
-          { label: 'Approved', value: approved.length, color: 'bg-green-50', textColor: 'text-green-700' },
-          { label: 'Rejected', value: rejected.length, color: 'bg-red-50', textColor: 'text-red-700' },
+          { label: copy.pending, value: pending.length, color: 'bg-amber-50', textColor: 'text-amber-700' },
+          { label: copy.approved, value: approved.length, color: 'bg-green-50', textColor: 'text-green-700' },
+          { label: copy.rejected, value: rejected.length, color: 'bg-red-50', textColor: 'text-red-700' },
         ].map(({ label, value, color, textColor }) => (
           <Card key={label} className={cn("border-0 shadow-sm", color)}>
             <CardContent className="p-4">
@@ -243,19 +334,19 @@ function ApplicationsContent() {
 
       <Tabs defaultValue="pending">
         <TabsList>
-          <TabsTrigger value="pending">Pending ({pending.length})</TabsTrigger>
-          <TabsTrigger value="approved">Approved ({approved.length})</TabsTrigger>
-          <TabsTrigger value="rejected">Rejected ({rejected.length})</TabsTrigger>
+          <TabsTrigger value="pending">{copy.pending} ({pending.length})</TabsTrigger>
+          <TabsTrigger value="approved">{copy.approved} ({approved.length})</TabsTrigger>
+          <TabsTrigger value="rejected">{copy.rejected} ({rejected.length})</TabsTrigger>
         </TabsList>
         {['pending', 'approved', 'rejected'].map(status => (
           <TabsContent key={status} value={status} className="space-y-4 mt-4">
             {(status === 'pending' ? pending : status === 'approved' ? approved : rejected).map(app => (
-              <ApplicationCard key={app.id} app={app} onAction={handleAction} />
+              <ApplicationCard key={app.id} app={app} onAction={handleAction} copy={copy} />
             ))}
             {(status === 'pending' ? pending : status === 'approved' ? approved : rejected).length === 0 && (
               <div className="text-center py-16 text-gray-400">
                 <Building2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                <p>No {status} applications</p>
+                <p>{copy.noApplications} {status === 'pending' ? copy.pending.toLowerCase() : status === 'approved' ? copy.approved.toLowerCase() : copy.rejected.toLowerCase()}</p>
               </div>
             )}
           </TabsContent>
@@ -266,14 +357,14 @@ function ApplicationsContent() {
       <Dialog open={actionTarget?.type === 'approve'} onOpenChange={() => setActionTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Approve Application</DialogTitle>
+            <DialogTitle>{copy.approveTitle}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-gray-600">
-              Approving <strong>{actionTarget?.app?.name}</strong> will:
+              {copy.approveText} <strong>{actionTarget?.app?.name}</strong> {copy.approveWill}
             </p>
             <ul className="space-y-1.5 text-sm text-gray-600">
-              {['Create a live institution page', `Publish at /PublicBooking?slug=${actionTarget?.app?.slug}`, 'Send a confirmation email to the applicant'].map(item => (
+              {copy.approveItems.map(item => (
                 <li key={item} className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />{item}
                 </li>
@@ -281,10 +372,10 @@ function ApplicationsContent() {
             </ul>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setActionTarget(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setActionTarget(null)}>{copy.cancel}</Button>
             <Button onClick={confirmApprove} disabled={approveInst.isPending}
               className="bg-green-600 hover:bg-green-700 text-white">
-              {approveInst.isPending ? 'Approving...' : 'Confirm Approve'}
+              {approveInst.isPending ? copy.approving : copy.confirmApprove}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -294,24 +385,24 @@ function ApplicationsContent() {
       <Dialog open={actionTarget?.type === 'reject'} onOpenChange={() => setActionTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject Application</DialogTitle>
+            <DialogTitle>{copy.rejectTitle}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-gray-600">
-              Rejecting <strong>{actionTarget?.app?.name}</strong>. Optionally provide a reason:
+              {copy.rejectText} <strong>{actionTarget?.app?.name}</strong>. {copy.rejectOptional}
             </p>
             <Textarea
-              placeholder="Reason for rejection (optional, will be stored internally)..."
+              placeholder={copy.rejectPlaceholder}
               value={rejectionReason}
               onChange={e => setRejectionReason(e.target.value)}
               rows={3}
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setActionTarget(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setActionTarget(null)}>{copy.cancel}</Button>
             <Button onClick={confirmReject} disabled={rejectInst.isPending}
               className="bg-red-600 hover:bg-red-700 text-white">
-              Confirm Reject
+              {copy.confirmReject}
             </Button>
           </DialogFooter>
         </DialogContent>

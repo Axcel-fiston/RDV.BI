@@ -7,8 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function AppointmentAction() {
+  const { t, lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const appointmentId = urlParams.get('id');
   const initialAction = urlParams.get('action'); // confirm | cancel
@@ -18,6 +20,51 @@ export default function AppointmentAction() {
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
   const [actionDone, setActionDone] = useState(null);
+  const copy = lang === 'fr'
+    ? {
+        invalidLink: "Lien invalide. Veuillez utiliser le lien reçu dans votre e-mail de rappel.",
+        appointmentNotFound: 'Rendez-vous introuvable.',
+        ticket: 'Ticket',
+        alreadyActioned: 'Ce rendez-vous est déjà',
+        cancelQuestion: 'Annuler le rendez-vous ?',
+        confirmQuestion: 'Confirmer votre rendez-vous',
+        cancelWarning: 'Êtes-vous sûr ? Cette action est irréversible.',
+        confirmWarning: 'Veuillez confirmer que vous serez présent à ce rendez-vous.',
+        keepIt: 'Conserver',
+        yesCancel: 'Oui, annuler',
+        confirmAttendance: 'Confirmer la présence',
+        appointmentConfirmed: 'Rendez-vous confirmé !',
+        rateService: 'Comment évalueriez-vous ce service ?',
+        commentPlaceholder: 'Laisser un commentaire (facultatif)',
+        skip: 'Passer',
+        submitRating: "Envoyer l'évaluation",
+        appointmentCancelled: 'Rendez-vous annulé',
+        seeYouSoon: 'Nous espérons vous revoir bientôt.',
+        thankYou: 'Merci !',
+        feedbackRecorded: 'Votre avis a bien été enregistré.',
+      }
+    : {
+        invalidLink: 'Invalid link. Please use the link from your reminder email.',
+        appointmentNotFound: 'Appointment not found.',
+        ticket: 'Ticket',
+        alreadyActioned: 'This appointment is already',
+        cancelQuestion: 'Cancel appointment?',
+        confirmQuestion: 'Confirm your appointment',
+        cancelWarning: 'Are you sure? This action cannot be undone.',
+        confirmWarning: 'Please confirm that you will attend this appointment.',
+        keepIt: 'Keep It',
+        yesCancel: 'Yes, Cancel',
+        confirmAttendance: 'Confirm Attendance',
+        appointmentConfirmed: 'Appointment Confirmed!',
+        rateService: 'How would you rate this service?',
+        commentPlaceholder: 'Leave a comment (optional)',
+        skip: 'Skip',
+        submitRating: 'Submit Rating',
+        appointmentCancelled: 'Appointment Cancelled',
+        seeYouSoon: 'We hope to see you again soon.',
+        thankYou: 'Thank You!',
+        feedbackRecorded: 'Your feedback has been recorded.',
+      };
 
   const { data: appointments = [], isLoading } = useQuery({
     queryKey: ['apt-action', appointmentId],
@@ -79,8 +126,8 @@ export default function AppointmentAction() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <p className="text-gray-600">Invalid link. Please use the link from your reminder email.</p>
-          <Link to={createPageUrl('Home')}><Button className="mt-4">Back to Home</Button></Link>
+          <p className="text-gray-600">{copy.invalidLink}</p>
+          <Link to={createPageUrl('Home')}><Button className="mt-4">{t('backToHome')}</Button></Link>
         </div>
       </div>
     );
@@ -99,8 +146,8 @@ export default function AppointmentAction() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <p className="text-gray-600">Appointment not found.</p>
-          <Link to={createPageUrl('Home')}><Button className="mt-4">Back to Home</Button></Link>
+          <p className="text-gray-600">{copy.appointmentNotFound}</p>
+          <Link to={createPageUrl('Home')}><Button className="mt-4">{t('backToHome')}</Button></Link>
         </div>
       </div>
     );
@@ -113,7 +160,7 @@ export default function AppointmentAction() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 text-[#1e3a5f] font-bold text-2xl">
+          <div className="inline-flex items-center gap-2 rounded-2xl px-2 py-2 text-[#1e3a5f] font-bold text-2xl bg-gradient-to-br from-slate-50 to-blue-50">
             <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
           </div>
         </div>
@@ -132,7 +179,7 @@ export default function AppointmentAction() {
               </span>
             </div>
             <span className="inline-block text-xs font-mono bg-[#1e3a5f]/10 text-[#1e3a5f] px-2 py-1 rounded-md mt-1">
-              Ticket: {appointment.ticket_number}
+              {copy.ticket}: {appointment.ticket_number}
             </span>
           </div>
 
@@ -141,33 +188,33 @@ export default function AppointmentAction() {
             isAlreadyActioned ? (
               <div className="text-center py-4">
                 <CheckCircle2 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">This appointment is already <strong>{appointment.status}</strong>.</p>
+                <p className="text-gray-500">{copy.alreadyActioned} <strong>{appointment.status}</strong>.</p>
                 <Link to={createPageUrl('Home')}>
-                  <Button className="mt-4 bg-[#1e3a5f] hover:bg-[#2d4a6f]">Back to Home</Button>
+                  <Button className="mt-4 bg-[#1e3a5f] hover:bg-[#2d4a6f]">{t('backToHome')}</Button>
                 </Link>
               </div>
             ) : (
               <>
                 <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
-                  {initialAction === 'cancel' ? 'Cancel appointment?' : 'Confirm your appointment'}
+                  {initialAction === 'cancel' ? copy.cancelQuestion : copy.confirmQuestion}
                 </h2>
                 <p className="text-gray-500 text-center text-sm mb-6">
                   {initialAction === 'cancel'
-                    ? 'Are you sure? This action cannot be undone.'
-                    : 'Please confirm that you will attend this appointment.'}
+                    ? copy.cancelWarning
+                    : copy.confirmWarning}
                 </p>
                 <div className="flex gap-3">
                   {initialAction === 'cancel' ? (
                     <>
                       <Link to={createPageUrl('Home')} className="flex-1">
-                        <Button variant="outline" className="w-full">Keep It</Button>
+                        <Button variant="outline" className="w-full">{copy.keepIt}</Button>
                       </Link>
                       <Button
                         onClick={handleAction}
                         disabled={updateMutation.isPending}
                         className="flex-1 bg-red-600 hover:bg-red-700"
                       >
-                        {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Cancel'}
+                        {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : copy.yesCancel}
                       </Button>
                     </>
                   ) : (
@@ -179,7 +226,7 @@ export default function AppointmentAction() {
                       {updateMutation.isPending
                         ? <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         : <CheckCircle2 className="w-5 h-5 mr-2" />}
-                      Confirm Attendance
+                      {copy.confirmAttendance}
                     </Button>
                   )}
                 </div>
@@ -192,8 +239,8 @@ export default function AppointmentAction() {
             <>
               <div className="text-center mb-6">
                 <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
-                <h2 className="text-xl font-bold text-gray-900">Appointment Confirmed!</h2>
-                <p className="text-gray-500 text-sm mt-1">How would you rate this service?</p>
+                <h2 className="text-xl font-bold text-gray-900">{copy.appointmentConfirmed}</h2>
+                <p className="text-gray-500 text-sm mt-1">{copy.rateService}</p>
               </div>
               <div className="flex justify-center gap-2 mb-4">
                 {[1, 2, 3, 4, 5].map(star => (
@@ -212,20 +259,20 @@ export default function AppointmentAction() {
                 ))}
               </div>
               <Textarea
-                placeholder="Leave a comment (optional)"
+                placeholder={copy.commentPlaceholder}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 className="mb-4"
                 rows={3}
               />
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep('done')} className="flex-1">Skip</Button>
+                <Button variant="outline" onClick={() => setStep('done')} className="flex-1">{copy.skip}</Button>
                 <Button
                   onClick={handleRating}
                   disabled={!rating || ratingMutation.isPending}
                   className="flex-1 bg-[#1e3a5f] hover:bg-[#2d4a6f]"
                 >
-                  {ratingMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit Rating'}
+                  {ratingMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : copy.submitRating}
                 </Button>
               </div>
             </>
@@ -237,18 +284,18 @@ export default function AppointmentAction() {
               {actionDone === 'cancelled' ? (
                 <>
                   <XCircle className="w-14 h-14 text-red-400 mx-auto mb-3" />
-                  <h2 className="text-xl font-bold text-gray-900">Appointment Cancelled</h2>
-                  <p className="text-gray-500 text-sm mt-1">We hope to see you again soon.</p>
+                  <h2 className="text-xl font-bold text-gray-900">{copy.appointmentCancelled}</h2>
+                  <p className="text-gray-500 text-sm mt-1">{copy.seeYouSoon}</p>
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto mb-3" />
-                  <h2 className="text-xl font-bold text-gray-900">Thank You!</h2>
-                  <p className="text-gray-500 text-sm mt-1">Your feedback has been recorded.</p>
+                  <h2 className="text-xl font-bold text-gray-900">{copy.thankYou}</h2>
+                  <p className="text-gray-500 text-sm mt-1">{copy.feedbackRecorded}</p>
                 </>
               )}
               <Link to={createPageUrl('Home')}>
-                <Button className="mt-6 bg-[#1e3a5f] hover:bg-[#2d4a6f]">Back to Home</Button>
+                <Button className="mt-6 bg-[#1e3a5f] hover:bg-[#2d4a6f]">{t('backToHome')}</Button>
               </Link>
             </div>
           )}

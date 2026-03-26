@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageContext';
 
 const C = {
   red: '#b91c1c',
@@ -13,6 +14,7 @@ const C = {
 };
 
 export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen overflow-hidden" style={{ background: C.bg }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -31,7 +33,16 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-6 md:px-8">
-        <header className="flex items-center justify-between py-2">
+        <header
+          className="fixed inset-x-0 top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-4 md:px-8"
+          style={{
+            background: 'rgba(255,255,255,0.58)',
+            borderColor: 'rgba(185,28,28,0.1)',
+            boxShadow: '0 1px 40px rgba(185,28,28,0.05)',
+            backdropFilter: 'blur(20px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+          }}
+        >
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
             <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
           </Link>
@@ -41,11 +52,11 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
             style={{ color: C.textMuted, background: 'rgba(255,255,255,0.66)' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Back Home
+            {t('backToHome')}
           </Link>
         </header>
 
-        <main className="pt-10 pb-16">
+        <main className="pt-28 pb-16">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em]" style={{ color: C.textMuted }}>
               {eyebrow}

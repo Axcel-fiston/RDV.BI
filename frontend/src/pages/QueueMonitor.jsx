@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function QueueMonitor() {
+  const { lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
   const [ticketSearch, setTicketSearch] = useState(urlParams.get('ticket') || '');
@@ -67,6 +69,59 @@ export default function QueueMonitor() {
   const isCompleted = submittedTicket
     ? appointments.some(a => a.ticket_number?.toLowerCase() === submittedTicket.toLowerCase() && a.status === 'completed')
     : false;
+  const copy = lang === 'fr'
+    ? {
+        noInstitution: "Aucune institution specifiee.",
+        findInstitutions: 'Trouver des institutions',
+        liveQueue: 'Suivi de file en direct',
+        nowServing: 'En cours',
+        counter: 'Guichet',
+        waiting: 'En attente',
+        inService: 'En service',
+        counters: 'Guichets',
+        checkPosition: 'Verifiez votre position',
+        ticketPlaceholder: 'Entrez votre ticket (ex. A21)',
+        find: 'Rechercher',
+        appointmentComplete: 'Votre rendez-vous est termine !',
+        notFoundPrefix: 'Le ticket',
+        notFoundSuffix: "est introuvable dans la file d'aujourd'hui.",
+        yourTicket: 'Votre ticket',
+        queuePosition: 'Position dans la file',
+        peopleAhead: 'Personnes devant vous',
+        estWait: "Temps d'attente estime",
+        serviceCounters: 'Guichets de service',
+        available: 'Disponible',
+        queue: 'File',
+        more: 'de plus',
+        noActiveQueue: 'Aucune file active pour le moment',
+        autoRefresh: 'Actualisation automatique toutes les 15 secondes',
+      }
+    : {
+        noInstitution: 'No institution specified.',
+        findInstitutions: 'Find Institutions',
+        liveQueue: 'Live Queue Monitor',
+        nowServing: 'Now Serving',
+        counter: 'Counter',
+        waiting: 'Waiting',
+        inService: 'In Service',
+        counters: 'Counters',
+        checkPosition: 'Check Your Position',
+        ticketPlaceholder: 'Enter your ticket (e.g. A21)',
+        find: 'Find',
+        appointmentComplete: 'Your appointment is complete!',
+        notFoundPrefix: 'Ticket',
+        notFoundSuffix: "not found in today's queue.",
+        yourTicket: 'Your ticket',
+        queuePosition: 'Queue position',
+        peopleAhead: 'People ahead',
+        estWait: 'Est. wait time',
+        serviceCounters: 'Service Counters',
+        available: 'Available',
+        queue: 'Queue',
+        more: 'more',
+        noActiveQueue: 'No active queue right now',
+        autoRefresh: 'Auto-refreshes every 15 seconds',
+      };
 
   const getWait = (pos) => {
     if (pos <= 0) return 0;
@@ -78,8 +133,8 @@ export default function QueueMonitor() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-500 mb-4">No institution specified.</p>
-          <Link to={createPageUrl('Institutions')}><Button>Find Institutions</Button></Link>
+          <p className="text-gray-500 mb-4">{copy.noInstitution}</p>
+          <Link to={createPageUrl('Institutions')}><Button>{copy.findInstitutions}</Button></Link>
         </div>
       </div>
     );
@@ -108,7 +163,7 @@ export default function QueueMonitor() {
             )}
             <div>
               <h1 className="font-bold leading-tight">{institution.name}</h1>
-              <p className="text-white/50 text-xs">Live Queue Monitor</p>
+              <p className="text-white/50 text-xs">{copy.liveQueue}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 text-white/60 text-sm">
@@ -124,13 +179,13 @@ export default function QueueMonitor() {
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
         {/* Now Serving */}
         <div className="text-center py-10 rounded-2xl border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }}>
-          <p className="text-white/50 text-xs uppercase tracking-widest mb-4">Now Serving</p>
+          <p className="text-white/50 text-xs uppercase tracking-widest mb-4">{copy.nowServing}</p>
           {inProgress.length > 0 ? (
             inProgress.map(apt => (
               <div key={apt.id}>
                 <p className="text-7xl font-black tracking-tight">{apt.ticket_number}</p>
                 <p className="text-white/60 text-sm mt-3">
-                  Counter {apt.counter_number}
+                  {copy.counter} {apt.counter_number}
                   {getServiceName(apt.service_id) && ` · ${getServiceName(apt.service_id)}`}
                 </p>
               </div>
@@ -143,9 +198,9 @@ export default function QueueMonitor() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Waiting', value: waiting.length, color: 'text-amber-300' },
-            { label: 'In Service', value: inProgress.length, color: 'text-green-300' },
-            { label: 'Counters', value: activeCounters.length, color: 'text-blue-300' },
+            { label: copy.waiting, value: waiting.length, color: 'text-amber-300' },
+            { label: copy.inService, value: inProgress.length, color: 'text-green-300' },
+            { label: copy.counters, value: activeCounters.length, color: 'text-blue-300' },
           ].map(({ label, value, color }) => (
             <div key={label} className="rounded-xl p-4 text-center border border-white/10" style={{ background: 'rgba(255,255,255,0.07)' }}>
               <p className={cn("text-3xl font-bold", color)}>{value}</p>
@@ -158,13 +213,13 @@ export default function QueueMonitor() {
         <div className="rounded-2xl p-5 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }}>
           <h2 className="font-semibold mb-3 flex items-center gap-2">
             <Search className="w-4 h-4 text-white/50" />
-            Check Your Position
+            {copy.checkPosition}
           </h2>
           <div className="flex gap-3">
             <Input
               value={ticketSearch}
               onChange={(e) => setTicketSearch(e.target.value.toUpperCase())}
-              placeholder="Enter your ticket (e.g. A21)"
+              placeholder={copy.ticketPlaceholder}
               className="bg-white/20 border-white/30 text-white placeholder:text-white/40 flex-1"
               onKeyDown={(e) => e.key === 'Enter' && setSubmittedTicket(ticketSearch)}
             />
@@ -172,7 +227,7 @@ export default function QueueMonitor() {
               onClick={() => setSubmittedTicket(ticketSearch)}
               className="bg-white text-[#1e3a5f] hover:bg-white/90 font-semibold"
             >
-              Find
+              {copy.find}
             </Button>
           </div>
 
@@ -180,29 +235,29 @@ export default function QueueMonitor() {
             <div className="mt-4">
               {isCompleted ? (
                 <div className="rounded-xl p-4 text-center border border-green-400/30" style={{ background: 'rgba(16,185,129,0.15)' }}>
-                  <p className="text-green-300 font-medium">✅ Your appointment is complete!</p>
+                  <p className="text-green-300 font-medium">✅ {copy.appointmentComplete}</p>
                 </div>
               ) : myIdx === -1 ? (
                 <div className="rounded-xl p-4 text-center border border-white/10" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <p className="text-white/50">Ticket <strong className="text-white">{submittedTicket}</strong> not found in today's queue.</p>
+                  <p className="text-white/50">{copy.notFoundPrefix} <strong className="text-white">{submittedTicket}</strong> {copy.notFoundSuffix}</p>
                 </div>
               ) : (
                 <div className="rounded-xl p-4 space-y-3 border border-amber-400/30" style={{ background: 'rgba(251,191,36,0.1)' }}>
                   <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Your ticket</span>
+                    <span className="text-white/60 text-sm">{copy.yourTicket}</span>
                     <span className="font-bold text-lg">{submittedTicket}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Queue position</span>
+                    <span className="text-white/60 text-sm">{copy.queuePosition}</span>
                     <span className="font-bold text-2xl text-amber-300">#{myIdx + 1}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">People ahead</span>
+                    <span className="text-white/60 text-sm">{copy.peopleAhead}</span>
                     <span className="font-bold">{myIdx}</span>
                   </div>
                   <div className="flex justify-between items-center border-t border-white/20 pt-3">
                     <span className="text-white/60 text-sm flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" /> Est. wait time
+                      <Clock className="w-4 h-4" /> {copy.estWait}
                     </span>
                     <span className="font-bold text-green-300 text-lg">~{getWait(myIdx)} min</span>
                   </div>
@@ -217,7 +272,7 @@ export default function QueueMonitor() {
           <div className="rounded-2xl p-5 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }}>
             <h2 className="font-semibold mb-3 flex items-center gap-2">
               <Monitor className="w-4 h-4 text-white/50" />
-              Service Counters
+              {copy.serviceCounters}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {activeCounters.map(counter => {
@@ -239,7 +294,7 @@ export default function QueueMonitor() {
                     {serving ? (
                       <p className="text-sm font-bold text-green-300 mt-1">{serving.ticket_number}</p>
                     ) : (
-                      <p className="text-xs text-white/30 mt-1">Available</p>
+                      <p className="text-xs text-white/30 mt-1">{copy.available}</p>
                     )}
                   </div>
                 );
@@ -253,7 +308,7 @@ export default function QueueMonitor() {
           <div className="rounded-2xl p-5 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }}>
             <h2 className="font-semibold mb-3 flex items-center gap-2">
               <Activity className="w-4 h-4 text-white/50" />
-              Queue ({waiting.length})
+              {copy.queue} ({waiting.length})
             </h2>
             <div className="space-y-2 max-h-52 overflow-y-auto">
               {waiting.slice(0, 12).map((apt, idx) => {
@@ -279,7 +334,7 @@ export default function QueueMonitor() {
                 );
               })}
               {waiting.length > 12 && (
-                <p className="text-center text-white/30 text-xs py-1">+{waiting.length - 12} more</p>
+                <p className="text-center text-white/30 text-xs py-1">+{waiting.length - 12} {copy.more}</p>
               )}
             </div>
           </div>
@@ -288,15 +343,19 @@ export default function QueueMonitor() {
         {waiting.length === 0 && inProgress.length === 0 && (
           <div className="text-center py-10 text-white/30">
             <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p>No active queue right now</p>
+            <p>{copy.noActiveQueue}</p>
           </div>
         )}
 
         <p className="text-center text-white/20 text-xs pb-6">
-          <Link to={createPageUrl('Home')} className="inline-flex items-center hover:opacity-70 transition-opacity">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-8 w-auto object-contain mix-blend-multiply" />
+          <Link
+            to={createPageUrl('Home')}
+            className="inline-flex items-center rounded-2xl px-2 py-1.5 hover:opacity-70 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 100%)' }}
+          >
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-8 w-auto object-contain" />
           </Link>
-          {' · '}Auto-refreshes every 15 seconds
+          {' · '}{copy.autoRefresh}
         </p>
       </div>
     </div>

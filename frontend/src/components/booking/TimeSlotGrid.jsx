@@ -1,12 +1,41 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Clock, CheckCircle2, Users } from 'lucide-react';
+import { Clock, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function TimeSlotGrid({ slots, selectedSlot, onSelect, loading }) {
+  const { lang } = useLanguage();
+  const copy = lang === 'fr'
+    ? {
+        morning: 'Matin',
+        afternoon: 'Apres-midi',
+        evening: 'Soir',
+        noSlots: 'Aucun creneau disponible pour cette date',
+        tryAnotherDay: 'Essayez un autre jour',
+        open: 'Libre',
+        selected: 'Selectionne',
+        full: 'Complet',
+        left: 'restants',
+        slotSelected: 'Creneau',
+        selectedSuffix: 'selectionne',
+      }
+    : {
+        morning: 'Morning',
+        afternoon: 'Afternoon',
+        evening: 'Evening',
+        noSlots: 'No available slots for this date',
+        tryAnotherDay: 'Try selecting another day',
+        open: 'Open',
+        selected: 'Selected',
+        full: 'Full',
+        left: 'left',
+        slotSelected: 'Time slot',
+        selectedSuffix: 'selected',
+      };
   if (loading) {
     return (
       <div className="space-y-5">
-        {['Morning', 'Afternoon'].map(label => (
+        {[copy.morning, copy.afternoon].map(label => (
           <div key={label}>
             <div className="h-4 w-20 bg-gray-100 rounded animate-pulse mb-3" />
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -24,8 +53,8 @@ export default function TimeSlotGrid({ slots, selectedSlot, onSelect, loading })
     return (
       <div className="text-center py-12 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
         <Clock className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-        <p className="font-medium text-gray-500">No available slots for this date</p>
-        <p className="text-sm text-gray-400 mt-1">Try selecting another day</p>
+        <p className="font-medium text-gray-500">{copy.noSlots}</p>
+        <p className="text-sm text-gray-400 mt-1">{copy.tryAnotherDay}</p>
       </div>
     );
   }
@@ -37,9 +66,9 @@ export default function TimeSlotGrid({ slots, selectedSlot, onSelect, loading })
   const evening = slots.filter(s => parseHour(s.start_time) >= 17);
 
   const sections = [
-    { label: '🌅 Morning', slots: morning },
-    { label: '☀️ Afternoon', slots: afternoon },
-    { label: '🌆 Evening', slots: evening },
+    { label: `🌅 ${copy.morning}`, slots: morning },
+    { label: `☀️ ${copy.afternoon}`, slots: afternoon },
+    { label: `🌆 ${copy.evening}`, slots: evening },
   ].filter(s => s.slots.length > 0);
 
   return (
@@ -84,16 +113,16 @@ export default function TimeSlotGrid({ slots, selectedSlot, onSelect, loading })
                       "text-[10px] mt-1 font-medium leading-none",
                       almostFull ? "text-amber-500" : "text-green-500"
                     )}>
-                      {almostFull ? `${spotsLeft} left` : 'Open'}
+                      {almostFull ? `${spotsLeft} ${copy.left}` : copy.open}
                     </span>
                   )}
 
                   {isSelected && (
-                    <span className="text-[10px] mt-1 text-white/70 font-medium leading-none">Selected</span>
+                    <span className="text-[10px] mt-1 text-white/70 font-medium leading-none">{copy.selected}</span>
                   )}
 
                   {!isAvailable && (
-                    <span className="text-[10px] mt-1 text-gray-300 font-medium leading-none">Full</span>
+                    <span className="text-[10px] mt-1 text-gray-300 font-medium leading-none">{copy.full}</span>
                   )}
                 </button>
               );
@@ -106,7 +135,7 @@ export default function TimeSlotGrid({ slots, selectedSlot, onSelect, loading })
         <div className="flex items-center gap-3 p-3 rounded-xl bg-[#1e3a5f]/5 border border-[#1e3a5f]/15">
           <CheckCircle2 className="w-4 h-4 text-[#1e3a5f] flex-shrink-0" />
           <p className="text-sm font-medium text-[#1e3a5f]">
-            Time slot <strong>{selectedSlot.start_time}</strong> selected
+            {copy.slotSelected} <strong>{selectedSlot.start_time}</strong> {copy.selectedSuffix}
             {selectedSlot.end_time && ` – ${selectedSlot.end_time}`}
           </p>
         </div>

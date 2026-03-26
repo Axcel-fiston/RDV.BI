@@ -108,7 +108,9 @@ export default function MyAppointments() {
                         </button>
                     </Link>
                     <div className="flex items-center gap-2 flex-1">
-                        <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
+                        <div className="inline-flex items-center rounded-2xl px-2 py-1.5" style={{ background: C.bg }}>
+                            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
+                        </div>
                     </div>
                     <LanguageSwitcher variant="outline" />
                 </div>

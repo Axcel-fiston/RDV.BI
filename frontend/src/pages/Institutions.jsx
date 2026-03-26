@@ -52,9 +52,16 @@ export default function Institutions() {
             </div>
 
             {/* Header */}
-            <header className="relative z-10 sticky top-0 border-b backdrop-blur-2xl"
-                style={{ background: 'rgba(255,255,255,0.8)', borderColor: 'rgba(185,28,28,0.1)', boxShadow: '0 1px 30px rgba(185,28,28,0.05)' }}>
-                <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+            <header
+                className="fixed inset-x-0 top-0 z-30 border-b"
+                style={{
+                    background: 'rgba(255,255,255,0.58)',
+                    borderColor: 'rgba(185,28,28,0.1)',
+                    boxShadow: '0 1px 30px rgba(185,28,28,0.05)',
+                    backdropFilter: 'blur(20px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+                }}>
+                <div className="max-w-4xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <Link to={createPageUrl('Home')}>
                             <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-all border"
@@ -70,7 +77,7 @@ export default function Institutions() {
                 </div>
             </header>
 
-            <div className="relative z-10 max-w-4xl mx-auto px-4 py-10">
+            <div className="relative z-10 max-w-4xl mx-auto px-4 py-32">
                 <div className="mb-10 text-center">
                     <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.text }}>{t('findInstitution')}</h1>
                     <p className="text-sm" style={{ color: C.textMuted }}>{t('bookAtOrgs')}</p>

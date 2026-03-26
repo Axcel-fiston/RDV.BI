@@ -20,7 +20,7 @@ export const translations = {
     partnerInstitutions: 'Our Partner Institutions',
     bookAtOrgs: 'Book appointments at these organizations',
     noInstitutions: 'No institutions available yet',
-    footer: '© 2024 RDV.bi - Online Appointment & Queue Management System',
+    footer: '© 2026 RDV - Online Appointment & Queue Management System',
     findInstitution: 'Find an Institution',
     searchPlaceholder: 'Search by name or type...',
     allTypes: 'All Types',

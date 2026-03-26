@@ -4,14 +4,18 @@ import { ClipboardList, LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { api } from '@/api/apiClient';
-
-const navItems = [
-  { label: 'Applications', path: '/InstitutionApplications', icon: ClipboardList },
-];
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function PlatformAdminLayout({ children, user }) {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const { lang, t } = useLanguage();
+  const navItems = [
+    { label: lang === 'fr' ? 'Candidatures' : 'Applications', path: '/InstitutionApplications', icon: ClipboardList },
+  ];
+  const copy = lang === 'fr'
+    ? { platformAdmin: 'Admin Plateforme', signedInAs: 'Connecté en tant que', platformAdministrator: 'Administrateur plateforme' }
+    : { platformAdmin: 'Platform Admin', signedInAs: 'Signed in as', platformAdministrator: 'Platform administrator' };
 
   const handleLogout = () => {
     api.auth.logout();
@@ -39,7 +43,7 @@ export default function PlatformAdminLayout({ children, user }) {
                 <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
                 <div>
                   <p className="font-semibold text-slate-900">RDV.bi</p>
-                  <p className="text-xs text-slate-500">Platform Admin</p>
+                  <p className="text-xs text-slate-500">{copy.platformAdmin}</p>
                 </div>
               </div>
               <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(false)}>
@@ -48,7 +52,7 @@ export default function PlatformAdminLayout({ children, user }) {
             </div>
 
             <div className="mt-4 rounded-xl bg-slate-50 p-3">
-              <p className="text-xs text-slate-500">Signed in as</p>
+              <p className="text-xs text-slate-500">{copy.signedInAs}</p>
               <p className="font-medium text-slate-900">{user?.fullName}</p>
               <p className="text-xs text-slate-500">{user?.email}</p>
             </div>
@@ -80,7 +84,7 @@ export default function PlatformAdminLayout({ children, user }) {
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition-all hover:bg-slate-50"
             >
               <LogOut className="h-5 w-5" />
-              <span className="font-medium">Logout</span>
+              <span className="font-medium">{t('logout')}</span>
             </button>
           </div>
         </div>
@@ -95,7 +99,7 @@ export default function PlatformAdminLayout({ children, user }) {
             <div className="ml-auto flex items-center gap-3">
               <div className="text-right">
                 <p className="text-sm font-medium text-slate-900">{user?.fullName}</p>
-                <p className="text-xs text-slate-500">Platform administrator</p>
+                <p className="text-xs text-slate-500">{copy.platformAdministrator}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 font-medium text-white">
                 {user?.fullName?.charAt(0) || 'P'}

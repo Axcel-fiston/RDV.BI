@@ -68,8 +68,16 @@ export default function Home() {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 border-b backdrop-blur-2xl"
-        style={{ background: 'rgba(255,255,255,0.75)', borderColor: 'rgba(185,28,28,0.1)', boxShadow: '0 1px 40px rgba(185,28,28,0.05)' }}>
+      <header
+        className="fixed inset-x-0 top-0 z-30 border-b"
+        style={{
+          background: 'rgba(255,255,255,0.58)',
+          borderColor: 'rgba(185,28,28,0.1)',
+          boxShadow: '0 1px 40px rgba(185,28,28,0.05)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-3">
           <div className="flex items-center gap-3">
             <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply sm:h-14" />
@@ -87,7 +95,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 flex flex-col items-center px-4 pt-24 pb-20 text-center">
+      <section className="relative z-10 flex flex-col items-center px-4 pt-32 pb-20 text-center">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8"
           style={{
@@ -208,8 +216,16 @@ export default function Home() {
         >
           <div className="grid gap-8 py-8 md:grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr] md:items-start">
             <div>
-              <Link to={createPageUrl('Home')} className="inline-flex items-center">
-                <img src="/RDV%20logo.png" alt="RDV.bi" className="h-16 w-auto object-contain mix-blend-multiply" />
+              <Link
+                to={createPageUrl('Home')}
+                className="inline-flex items-center rounded-2xl px-2 py-2"
+                style={{ background: C.bg }}
+              >
+                <img
+                  src="/RDV%20logo.png"
+                  alt="RDV.bi"
+                  className="h-16 w-auto object-contain mix-blend-multiply"
+                />
               </Link>
               <p className="mt-4 max-w-md text-sm leading-7" style={{ color: C.textMuted }}>
                 Premium appointment booking for institutions that want smoother queues, faster service, and a calmer customer experience.

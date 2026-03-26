@@ -30,7 +30,7 @@ const STEPS = {
     CONFIRMATION: 'confirmation'
 };
 
-const InstitutionHeader = ({ institution }) => (
+const InstitutionHeader = ({ institution, copy }) => (
     <section className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
         <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
@@ -47,7 +47,7 @@ const InstitutionHeader = ({ institution }) => (
                 )}
                 <div>
                     <p className="text-sm font-semibold uppercase text-[#1e3a5f]/80 tracking-wide">
-                        {institution.type || 'Institution'}
+                        {institution.type || copy.institution}
                     </p>
                     <h1 className="text-3xl font-bold text-gray-900">{institution.name}</h1>
                 </div>
@@ -76,7 +76,68 @@ export default function PublicBooking() {
     const slug = slugParam || searchParams.get('slug');
     const serviceIdFromQuery = searchParams.get('service');
     const queryClient = useQueryClient();
-    const { t } = useLanguage();
+    const { t, lang } = useLanguage();
+    const copy = lang === 'fr'
+        ? {
+            institution: 'Institution',
+            missingAppointment: 'Rendez-vous manquant',
+            missingFields: 'Choisissez un creneau et renseignez votre nom ainsi que votre telephone pour continuer.',
+            servicesLabel: 'Services',
+            selectServiceTitle: 'Choisissez un service',
+            serviceCountOne: 'service disponible',
+            serviceCountMany: 'services disponibles',
+            noServices: "Cette institution n'a pas encore publie de services.",
+            selected: 'Selectionne',
+            selectServiceButton: 'Choisir ce service',
+            bookingLabel: 'Reservation',
+            chooseDateTime: 'Choisissez la date et l heure',
+            selectedService: 'Service choisi',
+            unlockSlots: 'Choisissez un service pour afficher les creneaux disponibles.',
+            availableSlots: 'Creneaux disponibles',
+            selectedSlot: 'Creneau choisi',
+            on: 'le',
+            detailsLabel: 'Coordonnees',
+            bookingFor: 'Indiquez pour qui vous reservez',
+            requiredFields: 'Les champs obligatoires sont marques *',
+            fullName: 'Nom complet *',
+            phone: 'Telephone *',
+            emailOptional: 'E-mail (optionnel)',
+            confirmBooking: 'Confirmer la reservation',
+            phoneFallback: 'votre numero de telephone',
+            timeFallback: "l heure selectionnee",
+            otpNoticePrefix: 'Nous enverrons un code OTP a',
+            otpNoticeSuffix: 'et nous confirmerons votre rendez-vous a',
+        }
+        : {
+            institution: 'Institution',
+            missingAppointment: 'Missing appointment',
+            missingFields: 'Select a slot and provide your name and phone number to continue.',
+            servicesLabel: 'Services',
+            selectServiceTitle: 'Select a service',
+            serviceCountOne: 'service available',
+            serviceCountMany: 'services available',
+            noServices: 'This institution has not published any services yet.',
+            selected: 'Selected',
+            selectServiceButton: 'Select service',
+            bookingLabel: 'Booking',
+            chooseDateTime: 'Choose date & time',
+            selectedService: 'Selected service',
+            unlockSlots: 'Select a service to unlock available slots.',
+            availableSlots: 'Available slots',
+            selectedSlot: 'Selected slot',
+            on: 'on',
+            detailsLabel: 'Details',
+            bookingFor: "Tell us who you're booking for",
+            requiredFields: 'Required fields are marked *',
+            fullName: 'Full Name *',
+            phone: 'Phone *',
+            emailOptional: 'Email (optional)',
+            confirmBooking: 'Confirm booking',
+            phoneFallback: 'your phone number',
+            timeFallback: 'the selected time',
+            otpNoticePrefix: 'We will send an OTP to',
+            otpNoticeSuffix: 'and confirm your appointment at',
+        };
 
     const [step, setStep] = useState(STEPS.SERVICE);
     const [selectedService, setSelectedService] = useState(null);
@@ -126,7 +187,7 @@ export default function PublicBooking() {
 
     const verifyOTP = useMutation({
         mutationFn: async (code) => {
-            if (!appointment) throw new Error('Missing appointment');
+            if (!appointment) throw new Error(copy.missingAppointment);
             return api.entities.Appointment.verifyOtp({
                 appointmentId: appointment.id,
                 code,
@@ -164,7 +225,7 @@ export default function PublicBooking() {
 
     const handleBookingSubmit = async () => {
         if (!selectedService || !selectedSlot || !fullName || !phone) {
-            setErrorMessage('Select a slot and provide your name and phone number to continue.');
+            setErrorMessage(copy.missingFields);
             return;
         }
         setErrorMessage('');
@@ -241,20 +302,20 @@ export default function PublicBooking() {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-5xl mx-auto px-4 py-10 space-y-10">
-                <InstitutionHeader institution={institution} />
+                <InstitutionHeader institution={institution} copy={copy} />
 
                 <section className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">Services</p>
-                            <h2 className="text-2xl font-bold text-gray-900">Select a service</h2>
+                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">{copy.servicesLabel}</p>
+                            <h2 className="text-2xl font-bold text-gray-900">{copy.selectServiceTitle}</h2>
                         </div>
                         <span className="text-xs text-gray-500">
-                            {services.length} {services.length === 1 ? 'service' : 'services'} available
+                            {services.length} {services.length === 1 ? copy.serviceCountOne : copy.serviceCountMany}
                         </span>
                     </div>
                     {services.length === 0 ? (
-                        <p className="text-sm text-gray-500">This institution has not published any services yet.</p>
+                        <p className="text-sm text-gray-500">{copy.noServices}</p>
                     ) : (
                         <div className="grid gap-4 md:grid-cols-2">
                             {services.map((service) => {
@@ -294,7 +355,7 @@ export default function PublicBooking() {
                                             className="h-12"
                                             onClick={() => handleServiceSelect(service)}
                                         >
-                                            {selected ? 'Selected' : 'Select service'}
+                                            {selected ? copy.selected : copy.selectServiceButton}
                                             <ArrowRight className="w-4 h-4 ml-2" />
                                         </Button>
                                     </div>
@@ -307,18 +368,18 @@ export default function PublicBooking() {
                 <section className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6 space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">Booking</p>
-                            <h2 className="text-2xl font-bold text-gray-900">Choose date & time</h2>
+                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">{copy.bookingLabel}</p>
+                            <h2 className="text-2xl font-bold text-gray-900">{copy.chooseDateTime}</h2>
                         </div>
                         {selectedService && (
                             <div className="text-right">
-                                <p className="text-xs text-gray-500">Selected service</p>
+                                <p className="text-xs text-gray-500">{copy.selectedService}</p>
                                 <p className="font-medium text-gray-900">{selectedService.name}</p>
                             </div>
                         )}
                     </div>
                     {!selectedService ? (
-                        <p className="text-sm text-gray-500">Select a service to unlock available slots.</p>
+                        <p className="text-sm text-gray-500">{copy.unlockSlots}</p>
                     ) : (
                         <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
                             <Card className="border-gray-200 shadow-none">
@@ -334,7 +395,7 @@ export default function PublicBooking() {
                             </Card>
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <p className="text-sm font-semibold text-gray-600">Available slots</p>
+                                    <p className="text-sm font-semibold text-gray-600">{copy.availableSlots}</p>
                                     <span className="text-xs text-gray-400">{format(selectedDate, 'EEEE, MMM d')}</span>
                                 </div>
                                 <TimeSlotGrid
@@ -345,9 +406,9 @@ export default function PublicBooking() {
                                 />
                                 {selectedSlot && (
                                     <div className="rounded-2xl border border-dashed border-gray-200 p-4 bg-gray-50">
-                                        <p className="text-sm text-gray-500">Selected slot</p>
+                                        <p className="text-sm text-gray-500">{copy.selectedSlot}</p>
                                         <p className="text-lg font-semibold text-gray-900">
-                                            {selectedSlot.start_time} on {format(selectedDate, 'EEEE, MMM d')}
+                                            {selectedSlot.start_time} {copy.on} {format(selectedDate, 'EEEE, MMM d')}
                                         </p>
                                     </div>
                                 )}
@@ -359,14 +420,14 @@ export default function PublicBooking() {
                 <section className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">Details</p>
-                            <h2 className="text-2xl font-bold text-gray-900">Tell us who you're booking for</h2>
+                            <p className="text-sm font-semibold text-[#1e3a5f]/80 uppercase tracking-wide">{copy.detailsLabel}</p>
+                            <h2 className="text-2xl font-bold text-gray-900">{copy.bookingFor}</h2>
                         </div>
-                        <span className="text-xs text-gray-500">Required fields are marked *</span>
+                        <span className="text-xs text-gray-500">{copy.requiredFields}</span>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-1 text-sm">
-                            <label className="text-xs text-gray-500">Full Name *</label>
+                            <label className="text-xs text-gray-500">{copy.fullName}</label>
                             <Input
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
@@ -374,7 +435,7 @@ export default function PublicBooking() {
                             />
                         </div>
                         <div className="space-y-1 text-sm">
-                            <label className="text-xs text-gray-500">Phone *</label>
+                            <label className="text-xs text-gray-500">{copy.phone}</label>
                             <Input
                                 type="tel"
                                 value={phone}
@@ -383,7 +444,7 @@ export default function PublicBooking() {
                             />
                         </div>
                         <div className="space-y-1 text-sm md:col-span-2">
-                            <label className="text-xs text-gray-500">Email (optional)</label>
+                            <label className="text-xs text-gray-500">{copy.emailOptional}</label>
                             <Input
                                 type="email"
                                 value={email}
@@ -405,13 +466,13 @@ export default function PublicBooking() {
                                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                             ) : (
                                 <>
-                                    Confirm booking
+                                    {copy.confirmBooking}
                                     <ArrowRight className="w-5 h-5 ml-2" />
                                 </>
                             )}
                         </Button>
                         <p className="text-xs text-gray-500">
-                            We will send an OTP to {phone || 'your phone number'} and confirm your appointment at {selectedSlot?.start_time || 'the selected time'}.
+                            {copy.otpNoticePrefix} {phone || copy.phoneFallback} {copy.otpNoticeSuffix} {selectedSlot?.start_time || copy.timeFallback}.
                         </p>
                     </div>
                 </section>

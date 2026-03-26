@@ -2,12 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function OTPVerification({ phone, onVerify, onResend, onBack, loading }) {
+  const { lang } = useLanguage();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef([]);
+  const copy = lang === 'fr'
+    ? {
+        back: 'Retour',
+        title: 'Verifiez votre telephone',
+        desc: 'Saisissez le code a 6 chiffres envoye a',
+        verify: 'Verifier le code',
+        resend: 'Renvoyer le code',
+        resendIn: 'Renvoyer le code dans',
+      }
+    : {
+        back: 'Back',
+        title: 'Verify Your Phone',
+        desc: 'Enter the 6-digit code sent to',
+        verify: 'Verify Code',
+        resend: 'Resend Code',
+        resendIn: 'Resend code in',
+      };
 
   useEffect(() => {
     if (countdown > 0) {
@@ -71,13 +90,13 @@ export default function OTPVerification({ phone, onVerify, onResend, onBack, loa
         className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Back</span>
+        <span className="text-sm">{copy.back}</span>
       </button>
 
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Verify Your Phone</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">{copy.title}</h2>
         <p className="text-gray-500">
-          Enter the 6-digit code sent to
+          {copy.desc}
           <br />
           <span className="font-medium text-gray-900">{phone}</span>
         </p>
@@ -108,7 +127,7 @@ export default function OTPVerification({ phone, onVerify, onResend, onBack, loa
         {loading ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          'Verify Code'
+          copy.verify
         )}
       </Button>
 
@@ -118,11 +137,11 @@ export default function OTPVerification({ phone, onVerify, onResend, onBack, loa
             onClick={handleResend}
             className="text-[#1e3a5f] font-medium hover:underline"
           >
-            Resend Code
+            {copy.resend}
           </button>
         ) : (
           <p className="text-gray-500">
-            Resend code in <span className="font-medium">{countdown}s</span>
+            {copy.resendIn} <span className="font-medium">{countdown}s</span>
           </p>
         )}
       </div>

@@ -14,6 +14,9 @@ export default function Sidebar({ institution, user, open, onClose }) {
   const location = useLocation();
   const { t, lang } = useLanguage();
   const navLabels = { applications: lang === 'fr' ? 'Candidatures' : 'Applications' };
+  const copy = lang === 'fr'
+    ? { platformAdmin: 'Admin Plateforme', adminDashboard: 'Tableau de bord Admin', institution: 'Institution' }
+    : { platformAdmin: 'Platform Admin', adminDashboard: 'Admin Dashboard', institution: 'Institution' };
   const isPlatformAdmin = user?.role === 'PLATFORM_ADMIN';
   const isStaff = user?.role === 'STAFF';
 
@@ -63,7 +66,7 @@ export default function Sidebar({ institution, user, open, onClose }) {
                 <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
                 <div>
                   <h1 className="font-bold text-[#1e3a5f]">RDV.bi</h1>
-                  <p className="text-xs text-gray-500">{isPlatformAdmin ? 'Platform Admin' : 'Admin Dashboard'}</p>
+                  <p className="text-xs text-gray-500">{isPlatformAdmin ? copy.platformAdmin : copy.adminDashboard}</p>
                 </div>
               </div>
               <Button 
@@ -78,7 +81,7 @@ export default function Sidebar({ institution, user, open, onClose }) {
 
             {institution && !isPlatformAdmin && (
               <div className="mt-4 p-3 bg-gray-50 rounded-xl">
-                <p className="text-xs text-gray-500">Institution</p>
+                <p className="text-xs text-gray-500">{copy.institution}</p>
                 <p className="font-medium text-gray-900 truncate">{institution.name}</p>
               </div>
             )}
