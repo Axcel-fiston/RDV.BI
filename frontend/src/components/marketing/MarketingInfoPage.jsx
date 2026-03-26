@@ -44,7 +44,7 @@ export default function MarketingInfoPage({ eyebrow, title, intro, sections }) {
           }}
         >
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
+            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-14 w-auto object-contain" />
           </Link>
           <Link
             to={createPageUrl('Home')}

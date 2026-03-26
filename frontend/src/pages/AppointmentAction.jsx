@@ -161,7 +161,7 @@ export default function AppointmentAction() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 rounded-2xl px-2 py-2 text-[#1e3a5f] font-bold text-2xl bg-gradient-to-br from-slate-50 to-blue-50">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
+            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-14 w-auto object-contain" />
           </div>
         </div>
 

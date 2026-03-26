@@ -353,7 +353,7 @@ export default function QueueMonitor() {
             className="inline-flex items-center rounded-2xl px-2 py-1.5 hover:opacity-70 transition-opacity"
             style={{ background: 'linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 100%)' }}
           >
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-8 w-auto object-contain" />
+            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-8 w-auto object-contain" />
           </Link>
           {' · '}{copy.autoRefresh}
         </p>

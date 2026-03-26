@@ -69,10 +69,9 @@ export default function Home() {
 
       {/* Header */}
       <header
-        className="fixed inset-x-0 top-0 z-30 border-b"
+        className="fixed inset-x-0 top-0 z-30"
         style={{
           background: 'rgba(255,255,255,0.58)',
-          borderColor: 'rgba(185,28,28,0.1)',
           boxShadow: '0 1px 40px rgba(185,28,28,0.05)',
           backdropFilter: 'blur(20px) saturate(140%)',
           WebkitBackdropFilter: 'blur(20px) saturate(140%)',
@@ -80,7 +79,7 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-3">
           <div className="flex items-center gap-3">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply sm:h-14" />
+            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-12 w-auto object-contain sm:h-14" />
           </div>
           <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3">
             <LanguageSwitcher variant="outline" />
@@ -222,9 +221,9 @@ export default function Home() {
                 style={{ background: C.bg }}
               >
                 <img
-                  src="/RDV%20logo.png"
+                  src="/RDV_transparent.png"
                   alt="RDV.bi"
-                  className="h-16 w-auto object-contain mix-blend-multiply"
+                  className="h-16 w-auto object-contain"
                 />
               </Link>
               <p className="mt-4 max-w-md text-sm leading-7" style={{ color: C.textMuted }}>

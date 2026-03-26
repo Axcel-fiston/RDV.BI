@@ -161,7 +161,7 @@ export default function Contact() {
           }}
         >
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply sm:h-14" />
+            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-12 w-auto object-contain sm:h-14" />
           </Link>
           <Link
             to={createPageUrl('Home')}

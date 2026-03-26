@@ -134,9 +134,9 @@ export default function AdminLogin() {
         <header className="flex flex-wrap items-center justify-between gap-3 py-2 sm:py-4">
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
             <img
-              src="/RDV%20logo.png"
+              src="/RDV_transparent.png"
               alt="RDV.bi"
-              className="h-14 w-auto object-contain mix-blend-multiply sm:h-20"
+              className="h-14 w-auto object-contain sm:h-20"
             />
           </Link>
           <LanguageSwitcher variant="outline" />

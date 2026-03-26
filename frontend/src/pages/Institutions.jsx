@@ -70,7 +70,7 @@ export default function Institutions() {
                             </button>
                         </Link>
                         <div className="flex items-center gap-2">
-                            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-16 w-auto object-contain mix-blend-multiply sm:h-20" />
+                            <img src="/RDV_transparent.png" alt="RDV.bi" className="h-16 w-auto object-contain sm:h-20" />
                         </div>
                     </div>
                     <LanguageSwitcher variant="outline" />
