@@ -178,6 +178,6 @@ export default function Institutions() {
         </div>
         <PublicFooter />
     </div>
-);
+    );
 }
 
