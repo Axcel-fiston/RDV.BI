@@ -142,9 +142,7 @@ export default function JoinPlatform() {
               style={{ background: `linear-gradient(135deg, ${C.red}, ${C.green})` }}>
               <Calendar className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-sm" style={{ background: `linear-gradient(90deg, ${C.red}, ${C.green})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              RDV.bi
-            </span>
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
           </div>
           <span className="ml-auto text-sm font-medium" style={{ color: C.textMuted }}>Join as an Institution</span>
         </div>

@@ -41,17 +41,7 @@ export default function Home() {
         style={{ background: 'rgba(255,255,255,0.75)', borderColor: 'rgba(185,28,28,0.1)', boxShadow: '0 1px 40px rgba(185,28,28,0.05)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{
-                background: `linear-gradient(135deg, ${C.red}, ${C.green})`,
-                boxShadow: `0 4px 20px rgba(185,28,28,0.3)`,
-              }}>
-              <Calendar className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-wide"
-              style={{ background: `linear-gradient(90deg, ${C.red}, ${C.green})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              RDV.bi
-            </span>
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
           </div>
           <div className="flex items-center gap-3">
             <LanguageSwitcher variant="outline" />
@@ -176,10 +166,93 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 px-4"
-        style={{ borderTop: `1px solid rgba(185,28,28,0.08)`, background: 'rgba(255,255,255,0.5)' }}>
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-xs" style={{ color: C.textMuted }}>{t('footer')}</p>
+      <footer
+        className="relative z-10 px-4 pb-8"
+      >
+        <div
+          className="max-w-6xl mx-auto mt-8"
+          style={{
+            background: 'transparent',
+          }}
+        >
+          <div className="grid gap-8 py-8 md:grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr] md:items-start">
+            <div>
+              <Link to={createPageUrl('Home')} className="inline-flex items-center">
+                <img src="/RDV%20logo.png" alt="RDV.bi" className="h-16 w-auto object-contain mix-blend-multiply" />
+              </Link>
+              <p className="mt-4 max-w-md text-sm leading-7" style={{ color: C.textMuted }}>
+                Premium appointment booking for institutions that want smoother queues, faster service, and a calmer customer experience.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {['Banks', 'Clinics', 'Insurance', 'Public Services'].map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-full px-3 py-1 text-xs font-medium"
+                    style={{
+                      background: 'rgba(255,255,255,0.66)',
+                      border: '1px solid rgba(185,28,28,0.1)',
+                      color: C.textMuted,
+                    }}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
+                Product
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-sm">
+                <Link to={createPageUrl('Features')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  Features
+                </Link>
+                <Link to={createPageUrl('HowItWorks')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  How it works
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
+                Company
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-sm">
+                <Link to={createPageUrl('About')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  About us
+                </Link>
+                <Link to={createPageUrl('Contact')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
+                Legal
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-sm">
+                <Link to={createPageUrl('Terms')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  Terms
+                </Link>
+                <Link to={createPageUrl('Privacy')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  Privacy
+                </Link>
+                <Link to={createPageUrl('Cookies')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
+                  Cookies
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="flex flex-col gap-3 py-5 text-xs md:flex-row md:items-center md:justify-between"
+            style={{ color: C.textMuted }}
+          >
+            <p>{t('footer')}</p>
+            <p>Built for banks, clinics, insurers, and public services.</p>
+          </div>
         </div>
       </footer>
     </div>

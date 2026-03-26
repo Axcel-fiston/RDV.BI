@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Building2, ClipboardList, LogOut, Menu, Shield, X } from 'lucide-react';
+import { ClipboardList, LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { api } from '@/api/apiClient';
@@ -36,9 +36,7 @@ export default function PlatformAdminLayout({ children, user }) {
           <div className="border-b border-slate-100 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white">
-                  <Shield className="h-5 w-5" />
-                </div>
+                <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
                 <div>
                   <p className="font-semibold text-slate-900">RDV.bi</p>
                   <p className="text-xs text-slate-500">Platform Admin</p>

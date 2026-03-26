@@ -26,6 +26,13 @@ import JoinPlatform from './pages/JoinPlatform';
 import InstitutionApplications from './pages/InstitutionApplications';
 import OnboardingWizard from './pages/OnboardingWizard';
 import Docs from './pages/Docs';
+import Contact from './pages/Contact';
+import Features from './pages/Features';
+import HowItWorks from './pages/HowItWorks';
+import About from './pages/About';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Cookies from './pages/Cookies';
 
 const LayoutWrapper = ({ children }) => <Layout>{children}</Layout>;
 
@@ -75,6 +82,13 @@ const PUBLIC_PATHS = new Set([
   '/JoinPlatform',
   '/InstitutionRegister',
   '/Docs',
+  '/Contact',
+  '/Features',
+  '/HowItWorks',
+  '/About',
+  '/Terms',
+  '/Privacy',
+  '/Cookies',
 ]);
 
 const AuthenticatedApp = () => {
@@ -122,6 +136,13 @@ const AuthenticatedApp = () => {
       <Route path="/JoinPlatform" element={<LayoutWrapper><JoinPlatform /></LayoutWrapper>} />
       <Route path="/InstitutionRegister" element={<LayoutWrapper><JoinPlatform /></LayoutWrapper>} />
       <Route path="/Docs" element={<Docs />} />
+      <Route path="/Contact" element={<LayoutWrapper><Contact /></LayoutWrapper>} />
+      <Route path="/Features" element={<LayoutWrapper><Features /></LayoutWrapper>} />
+      <Route path="/HowItWorks" element={<LayoutWrapper><HowItWorks /></LayoutWrapper>} />
+      <Route path="/About" element={<LayoutWrapper><About /></LayoutWrapper>} />
+      <Route path="/Terms" element={<LayoutWrapper><Terms /></LayoutWrapper>} />
+      <Route path="/Privacy" element={<LayoutWrapper><Privacy /></LayoutWrapper>} />
+      <Route path="/Cookies" element={<LayoutWrapper><Cookies /></LayoutWrapper>} />
       <Route path="/InstitutionApplications" element={<RequireAuth><RequireRole roles={['PLATFORM_ADMIN']}><LayoutWrapper><InstitutionApplications /></LayoutWrapper></RequireRole></RequireAuth>} />
       <Route path="/OnboardingWizard" element={<RequireAuth><RequireRole roles={['ADMIN']}><LayoutWrapper><OnboardingWizard /></LayoutWrapper></RequireRole></RequireAuth>} />
       <Route path="*" element={<PageNotFound />} />

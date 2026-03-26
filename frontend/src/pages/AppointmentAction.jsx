@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '@/api/apiClient';
-import { CheckCircle2, XCircle, Star, Calendar, Clock, Building2, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Star, Calendar, Clock, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from 'react-router-dom';
@@ -114,8 +114,7 @@ export default function AppointmentAction() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-[#1e3a5f] font-bold text-2xl">
-            <Building2 className="w-7 h-7" />
-            RDV.bi
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
           </div>
         </div>
 

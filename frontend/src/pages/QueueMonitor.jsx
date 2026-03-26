@@ -293,7 +293,9 @@ export default function QueueMonitor() {
         )}
 
         <p className="text-center text-white/20 text-xs pb-6">
-          <Link to={createPageUrl('Home')} className="hover:text-white/50 transition-colors">RDV.bi</Link>
+          <Link to={createPageUrl('Home')} className="inline-flex items-center hover:opacity-70 transition-opacity">
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-8 w-auto object-contain mix-blend-multiply" />
+          </Link>
           {' · '}Auto-refreshes every 15 seconds
         </p>
       </div>

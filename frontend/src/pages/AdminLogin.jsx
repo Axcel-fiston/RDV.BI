@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Lock, Mail } from 'lucide-react';
+import { AlertCircle, ArrowRight, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function AdminLogin() {
   const { login } = useAuth();
@@ -14,10 +15,33 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isShaking, setIsShaking] = useState(false);
+
+  const triggerShake = () => {
+    setIsShaking(false);
+    window.requestAnimationFrame(() => {
+      setIsShaking(true);
+      window.setTimeout(() => setIsShaking(false), 360);
+    });
+  };
+
+  const validateEmailTransition = () => {
+    if (email.trim() && !email.includes('@')) {
+      setEmailError('Include the @ in the email address.');
+      triggerShake();
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    if (!validateEmailTransition()) {
+      return;
+    }
     setSubmitting(true);
     try {
       const user = await login(email, password);
@@ -31,53 +55,229 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-center">Admin / Staff Login</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="flex items-start gap-2 mb-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md p-3">
-              <AlertCircle className="w-4 h-4 mt-0.5" />
-              <span>{error}</span>
-            </div>
-          )}
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="text-sm text-gray-700 mb-1 block">Email</label>
+    <div
+      className="min-h-screen overflow-hidden px-4 py-6 sm:px-6 lg:px-8"
+      style={{
+        background:
+          'linear-gradient(135deg, #fef7f1 0%, #fffdf9 28%, #f6efe6 58%, #f4f7fb 100%)',
+      }}
+    >
+      <style>{`
+        @keyframes rdv-login-shake {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-10px); }
+          40% { transform: translateX(9px); }
+          60% { transform: translateX(-7px); }
+          80% { transform: translateX(5px); }
+        }
+      `}</style>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div
+          className="absolute -top-24 left-[-8%] h-[28rem] w-[28rem] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(193,154,107,0.20) 0%, transparent 68%)' }}
+        />
+        <div
+          className="absolute right-[-10%] top-[12%] h-[30rem] w-[30rem] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(112,82,56,0.14) 0%, transparent 72%)' }}
+        />
+        <div
+          className="absolute bottom-[-10%] left-[30%] h-[26rem] w-[26rem] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(148,163,184,0.20) 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            background:
+              'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 48%, transparent 62%)',
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col">
+        <header className="flex items-center justify-between py-2 sm:py-4">
+          <Link to={createPageUrl('Home')} className="inline-flex items-center">
+            <img
+              src="/RDV%20logo.png"
+              alt="RDV.bi"
+              className="h-16 w-auto object-contain mix-blend-multiply sm:h-20"
+            />
+          </Link>
+          <LanguageSwitcher variant="outline" />
+        </header>
+
+        <main className="flex flex-1 items-center justify-center py-6">
+          <div
+            className="grid w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl lg:grid-cols-[1.1fr_0.9fr]"
+            style={{
+              background: 'rgba(255,255,255,0.40)',
+              borderColor: 'rgba(255,255,255,0.45)',
+              boxShadow: '0 30px 80px rgba(92, 69, 46, 0.18), inset 0 1px 0 rgba(255,255,255,0.55)',
+              backdropFilter: 'blur(26px)',
+              animation: isShaking ? 'rdv-login-shake 360ms ease-in-out' : 'none',
+            }}
+          >
+            <section className="relative hidden min-h-[620px] flex-col justify-between overflow-hidden p-10 lg:flex">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(160deg, rgba(255,255,255,0.32) 0%, rgba(197,168,126,0.18) 40%, rgba(79,98,122,0.16) 100%)',
+                }}
+              />
+              <div
+                className="absolute right-[-8%] top-[-10%] h-64 w-64 rounded-full blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.34) 0%, transparent 70%)' }}
+              />
+              <div
+                className="absolute bottom-[-8%] left-[-10%] h-72 w-72 rounded-full blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(193,154,107,0.22) 0%, transparent 72%)' }}
+              />
+
               <div className="relative">
-                <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@institution.com"
-                  className="pl-10"
-                  required
-                />
+                <div
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em]"
+                  style={{
+                    background: 'rgba(255,255,255,0.34)',
+                    color: '#6f553f',
+                    border: '1px solid rgba(255,255,255,0.38)',
+                  }}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Premium Access
+                </div>
+                <h1 className="mt-8 max-w-md text-5xl font-semibold leading-tight text-[#24160d]">
+                  Welcome back to the operations suite.
+                </h1>
+                <p className="mt-5 max-w-lg text-base leading-7 text-[#5e4b3b]">
+                  Sign in to manage queues, appointments, institution approvals, and staff operations from a single control surface.
+                </p>
               </div>
-            </div>
-            <div>
-              <label className="text-sm text-gray-700 mb-1 block">Password</label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="pl-10"
-                  required
-                />
+
+              <div className="relative grid gap-4">
+                <div
+                  className="rounded-[1.5rem] p-5"
+                  style={{
+                    background: 'rgba(255,255,255,0.28)',
+                    border: '1px solid rgba(255,255,255,0.36)',
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-2xl bg-white/45 p-3 text-[#5f4634]">
+                      <ShieldCheck className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#7a6049]">Protected Workspace</p>
+                      <p className="mt-2 text-sm leading-6 text-[#4f3f31]">
+                        Access is limited to staff, admins, and platform administrators with role-based routing after sign-in.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <Button type="submit" className="w-full" disabled={submitting}>
-              {submitting ? 'Signing in…' : 'Sign in'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+            </section>
+
+            <section className="p-6 sm:p-10 lg:p-12">
+              <div className="mx-auto max-w-md">
+                <div className="mb-8">
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8a6a4d]">
+                    Admin Portal
+                  </p>
+                  <h2 className="mt-3 text-3xl font-semibold text-[#20150d]">Admin / Staff Login</h2>
+                  <p className="mt-3 text-sm leading-6 text-[#6b5847]">
+                    Use your assigned account credentials to enter the dashboard.
+                  </p>
+                </div>
+
+                {error && (
+                  <div
+                    className="mb-5 flex items-start gap-3 rounded-2xl p-4 text-sm"
+                    style={{
+                      color: '#b42318',
+                      background: 'rgba(255,245,245,0.82)',
+                      border: '1px solid rgba(254,205,211,0.9)',
+                    }}
+                  >
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <form className="space-y-5" onSubmit={handleSubmit}>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a7a5c]" />
+                      <Input
+                        type="email"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          if (emailError) setEmailError('');
+                        }}
+                        onBlur={validateEmailTransition}
+                        onKeyDown={(e) => {
+                          if ((e.key === 'Tab' || e.key === 'Enter') && !validateEmailTransition()) {
+                            e.preventDefault();
+                          }
+                        }}
+                        placeholder="you@institution.com"
+                        className="h-14 rounded-2xl border-0 pl-11 text-[15px] shadow-none focus-visible:ring-0"
+                        style={{
+                          background: 'rgba(255,255,255,0.55)',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 25px rgba(103,74,49,0.06)',
+                        }}
+                        required
+                      />
+                    </div>
+                    {emailError && (
+                      <p className="mt-2 text-sm" style={{ color: '#b42318' }}>
+                        {emailError}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a7a5c]" />
+                      <Input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="h-14 rounded-2xl border-0 pl-11 text-[15px] shadow-none focus-visible:ring-0"
+                        style={{
+                          background: 'rgba(255,255,255,0.55)',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 25px rgba(103,74,49,0.06)',
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="h-14 w-full rounded-2xl text-sm font-semibold"
+                    style={{
+                      background: 'linear-gradient(135deg, #7b5a3f 0%, #c59a6b 55%, #f0d4b0 100%)',
+                      color: '#20150d',
+                      boxShadow: '0 18px 40px rgba(123,90,63,0.24)',
+                    }}
+                    disabled={submitting}
+                  >
+                    <span>{submitting ? 'Signing in…' : 'Sign in'}</span>
+                    {!submitting && <ArrowRight className="ml-2 h-4 w-4" />}
+                  </Button>
+                </form>
+
+                <div className="mt-6 rounded-2xl border border-white/40 bg-white/24 px-4 py-3 text-xs leading-6 text-[#6d5845]">
+                  Click the logo above any time to return to the home page.
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

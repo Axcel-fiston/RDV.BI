@@ -67,10 +67,7 @@ export default function Institutions() {
                                 style={{ background: `linear-gradient(135deg, ${C.red}, ${C.green})`, boxShadow: '0 4px 12px rgba(185,28,28,0.3)' }}>
                                 <Calendar className="w-4 h-4 text-white" />
                             </div>
-                            <span className="font-bold text-sm tracking-wide"
-                                style={{ background: `linear-gradient(90deg, ${C.red}, ${C.green})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                                RDV.bi
-                            </span>
+                            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
                         </div>
                     </div>
                     <LanguageSwitcher variant="outline" />

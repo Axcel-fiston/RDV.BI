@@ -60,9 +60,7 @@ export default function Sidebar({ institution, user, open, onClose }) {
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#1e3a5f] rounded-xl flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-white" />
-                </div>
+                <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
                 <div>
                   <h1 className="font-bold text-[#1e3a5f]">RDV.bi</h1>
                   <p className="text-xs text-gray-500">{isPlatformAdmin ? 'Platform Admin' : 'Admin Dashboard'}</p>
