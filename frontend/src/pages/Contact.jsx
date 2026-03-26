@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLanguage } from '@/components/LanguageContext';
 
 const C = {
   red: '#b91c1c',
@@ -16,14 +17,11 @@ const C = {
   bg: 'linear-gradient(150deg, #fff8f8 0%, #fff 40%, #f0fdf4 100%)',
 };
 
-const TOPICS = [
-  'General Inquiry',
-  'Institution Onboarding',
-  'Platform Support',
-  'Partnership',
-];
-
 export default function Contact() {
+  const { lang, t } = useLanguage();
+  const TOPICS = lang === 'fr'
+    ? ['Demande générale', "Intégration d'institution", 'Support plateforme', 'Partenariat']
+    : ['General Inquiry', 'Institution Onboarding', 'Platform Support', 'Partnership'];
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -33,6 +31,77 @@ export default function Contact() {
   });
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const copy = lang === 'fr'
+    ? {
+        contactUs: 'Contact',
+        heroTitle: 'Une expérience de contact premium pour les institutions et les équipes de plateforme.',
+        heroDesc: 'Envoyez votre demande via le formulaire ci-dessous et nous la dirigerons vers la bonne conversation, que vous ayez besoin de conseils d’onboarding, d’aide opérationnelle ou de support partenariat.',
+        cards: [
+          { title: 'Demandes générales', detail: 'Questions sur la plateforme, les accès au compte ou l’orientation produit.' },
+          { title: "Intégration d'institution", detail: "Besoin d'aide avant l'inscription ou pour préparer votre parcours de réservation." },
+          { title: 'Support plateforme', detail: 'Problèmes liés au personnel, aux admins ou à la plateforme nécessitant une réponse directe.' },
+        ],
+        nextStep: 'Meilleure étape suivante',
+        nextTitle: 'Vous souhaitez rejoindre RDV.BI en tant qu’institution ?',
+        nextDesc: 'Le chemin le plus rapide reste la page d’inscription institutionnelle. Utilisez ce formulaire de contact si votre demande est plus large, opérationnelle ou liée à un partenariat.',
+        registerInstitution: 'Inscrire votre institution',
+        sendMessage: 'Envoyer un message',
+        contactForm: 'Formulaire de contact',
+        contactFormDesc: 'Ce formulaire ouvre votre client e-mail avec un message prérempli afin que vous puissiez envoyer votre demande immédiatement.',
+        requiredError: 'Le nom, l’e-mail et le message sont obligatoires.',
+        mailOpened: 'Votre application e-mail devrait maintenant être ouverte avec le message prérempli.',
+        fullName: 'Nom complet',
+        yourName: 'Votre nom',
+        email: 'E-mail',
+        institution: 'Institution',
+        institutionName: "Nom de l'institution",
+        topic: 'Sujet',
+        selectTopic: 'Choisir un sujet',
+        message: 'Message',
+        messagePlaceholder: 'Expliquez-nous ce dont vous avez besoin.',
+        sendButton: 'Envoyer le message',
+        mailSubject: 'Contact RDV.BI',
+        nameLabel: 'Nom',
+        emailLabel: 'E-mail',
+        institutionLabel: 'Institution',
+        topicLabel: 'Sujet',
+        notApplicable: 'N/A',
+      }
+    : {
+        contactUs: 'Contact Us',
+        heroTitle: 'A premium contact experience for institutions and platform teams.',
+        heroDesc: 'Send your request through the form below and we will route it to the right conversation, whether you need onboarding guidance, operational help, or partnership support.',
+        cards: [
+          { title: 'General Inquiries', detail: 'Questions about the platform, account access, or product direction.' },
+          { title: 'Institution Onboarding', detail: 'Need guidance before registering or preparing your booking workflow.' },
+          { title: 'Platform Support', detail: 'Staff, admin, or platform-level issues that need a direct response.' },
+        ],
+        nextStep: 'Best Next Step',
+        nextTitle: 'Want to join RDV.BI as an institution?',
+        nextDesc: 'The fastest path is still the institution registration page. Use this contact form when your question is broader, operational, or partnership-related.',
+        registerInstitution: 'Register Your Institution',
+        sendMessage: 'Send A Message',
+        contactForm: 'Contact form',
+        contactFormDesc: 'This form opens your mail client with a pre-filled message so you can send your request immediately.',
+        requiredError: 'Name, email, and message are required.',
+        mailOpened: 'Your mail app should be open now with the message pre-filled.',
+        fullName: 'Full Name',
+        yourName: 'Your name',
+        email: 'Email',
+        institution: 'Institution',
+        institutionName: 'Institution name',
+        topic: 'Topic',
+        selectTopic: 'Select a topic',
+        message: 'Message',
+        messagePlaceholder: 'Tell us what you need help with.',
+        sendButton: 'Send Message',
+        mailSubject: 'RDV.BI Contact',
+        nameLabel: 'Name',
+        emailLabel: 'Email',
+        institutionLabel: 'Institution',
+        topicLabel: 'Topic',
+        notApplicable: 'N/A',
+      };
 
   const handleChange = (key) => (event) => {
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
@@ -43,17 +112,17 @@ export default function Contact() {
     setError('');
 
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      setError('Name, email, and message are required.');
+      setError(copy.requiredError);
       return;
     }
 
-    const subject = encodeURIComponent(`RDV.BI Contact: ${form.topic}`);
+    const subject = encodeURIComponent(`${copy.mailSubject}: ${form.topic}`);
     const body = encodeURIComponent(
       [
-        `Name: ${form.name.trim()}`,
-        `Email: ${form.email.trim()}`,
-        `Institution: ${form.institution.trim() || 'N/A'}`,
-        `Topic: ${form.topic}`,
+        `${copy.nameLabel}: ${form.name.trim()}`,
+        `${copy.emailLabel}: ${form.email.trim()}`,
+        `${copy.institutionLabel}: ${form.institution.trim() || copy.notApplicable}`,
+        `${copy.topicLabel}: ${form.topic}`,
         '',
         form.message.trim(),
       ].join('\n')
@@ -81,50 +150,38 @@ export default function Contact() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-6 md:px-8">
-        <header className="flex items-center justify-between py-2">
+        <header className="flex flex-wrap items-center justify-between gap-3 py-2">
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply sm:h-14" />
           </Link>
           <Link
             to={createPageUrl('Home')}
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70 sm:w-auto"
             style={{ color: C.textMuted, background: 'rgba(255,255,255,0.66)' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Back Home
+            {t('backToHome')}
           </Link>
         </header>
 
         <main className="pt-10 pb-16">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em]" style={{ color: C.textMuted }}>
-              Contact Us
+              {copy.contactUs}
             </p>
             <h1 className="mt-4 text-4xl md:text-5xl font-bold leading-tight" style={{ color: C.text }}>
-              A premium contact experience for institutions and platform teams.
+              {copy.heroTitle}
             </h1>
             <p className="mt-5 text-base leading-8" style={{ color: C.textMuted }}>
-              Send your request through the form below and we will route it to the right conversation, whether you need onboarding guidance, operational help, or partnership support.
+              {copy.heroDesc}
             </p>
           </div>
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
-              {
-                icon: Mail,
-                title: 'General Inquiries',
-                detail: 'Questions about the platform, account access, or product direction.',
-              },
-              {
-                icon: MessageSquare,
-                title: 'Institution Onboarding',
-                detail: 'Need guidance before registering or preparing your booking workflow.',
-              },
-              {
-                icon: ShieldCheck,
-                title: 'Platform Support',
-                detail: 'Staff, admin, or platform-level issues that need a direct response.',
-              },
+              { icon: Mail, ...copy.cards[0] },
+              { icon: MessageSquare, ...copy.cards[1] },
+              { icon: ShieldCheck, ...copy.cards[2] },
             ].map(({ icon: Icon, title, detail }) => (
               <div
                 key={title}
@@ -159,13 +216,13 @@ export default function Contact() {
               }}
             >
               <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: C.textMuted }}>
-                Best Next Step
+                {copy.nextStep}
               </p>
               <h3 className="mt-3 text-2xl font-bold" style={{ color: C.text }}>
-                Want to join RDV.BI as an institution?
+                {copy.nextTitle}
               </h3>
               <p className="mt-4 text-sm leading-7" style={{ color: C.textMuted }}>
-                The fastest path is still the institution registration page. Use this contact form when your question is broader, operational, or partnership-related.
+                {copy.nextDesc}
               </p>
               <div className="mt-6">
                 <Link to={createPageUrl('InstitutionRegister')}>
@@ -177,7 +234,7 @@ export default function Contact() {
                       boxShadow: '0 10px 30px rgba(185,28,28,0.22)',
                     }}
                   >
-                    Register Your Institution
+                    {copy.registerInstitution}
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -195,13 +252,13 @@ export default function Contact() {
             >
               <div className="mb-6">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: C.textMuted }}>
-                  Send A Message
+                  {copy.sendMessage}
                 </p>
                 <h3 className="mt-3 text-2xl font-bold" style={{ color: C.text }}>
-                  Contact form
+                  {copy.contactForm}
                 </h3>
                 <p className="mt-3 text-sm leading-7" style={{ color: C.textMuted }}>
-                  This form opens your mail client with a pre-filled message so you can send your request immediately.
+                  {copy.contactFormDesc}
                 </p>
               </div>
 
@@ -219,24 +276,24 @@ export default function Contact() {
                   className="mb-5 rounded-2xl px-4 py-3 text-sm"
                   style={{ background: 'rgba(240,253,244,0.95)', color: C.green, border: '1px solid rgba(21,128,61,0.12)' }}
                 >
-                  Your mail app should be open now with the message pre-filled.
+                  {copy.mailOpened}
                 </div>
               )}
 
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>Full Name</label>
+                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>{copy.fullName}</label>
                     <Input
                       value={form.name}
                       onChange={handleChange('name')}
-                      placeholder="Your name"
+                      placeholder={copy.yourName}
                       className="h-12 rounded-2xl border-0 shadow-none focus-visible:ring-0"
                       style={{ background: 'rgba(255,255,255,0.74)' }}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>Email</label>
+                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>{copy.email}</label>
                     <Input
                       type="email"
                       value={form.email}
@@ -250,17 +307,17 @@ export default function Contact() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>Institution</label>
+                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>{copy.institution}</label>
                     <Input
                       value={form.institution}
                       onChange={handleChange('institution')}
-                      placeholder="Institution name"
+                      placeholder={copy.institutionName}
                       className="h-12 rounded-2xl border-0 shadow-none focus-visible:ring-0"
                       style={{ background: 'rgba(255,255,255,0.74)' }}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>Topic</label>
+                    <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>{copy.topic}</label>
                     <Select
                       value={form.topic}
                       onValueChange={(value) => setForm((prev) => ({ ...prev, topic: value }))}
@@ -274,7 +331,7 @@ export default function Contact() {
                           boxShadow: '0 10px 30px rgba(212,175,106,0.10)',
                         }}
                       >
-                        <SelectValue placeholder="Select a topic" />
+                          <SelectValue placeholder={copy.selectTopic} />
                       </SelectTrigger>
                       <SelectContent
                         className="rounded-[1.4rem] border-0 p-2 shadow-2xl"
@@ -300,11 +357,11 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>Message</label>
+                  <label className="mb-2 block text-sm font-medium" style={{ color: C.text }}>{copy.message}</label>
                   <Textarea
                     value={form.message}
                     onChange={handleChange('message')}
-                    placeholder="Tell us what you need help with."
+                    placeholder={copy.messagePlaceholder}
                     className="min-h-[180px] rounded-[1.5rem] border-0 shadow-none focus-visible:ring-0"
                     style={{ background: 'rgba(255,255,255,0.74)' }}
                   />
@@ -320,7 +377,7 @@ export default function Contact() {
                   }}
                 >
                   <Send className="mr-2 w-4 h-4" />
-                  Send Message
+                  {copy.sendButton}
                 </Button>
               </form>
             </section>

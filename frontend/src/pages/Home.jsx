@@ -19,7 +19,38 @@ const C = {
 };
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const copy = lang === 'fr'
+    ? {
+        partner: 'Devenir partenaire',
+        sectors: ['Banques', 'Cliniques', 'Assurance', 'Services publics'],
+        product: 'Produit',
+        features: 'Fonctionnalités',
+        howItWorks: 'Comment ça marche',
+        company: 'Entreprise',
+        about: 'À propos',
+        contact: 'Contact',
+        legal: 'Juridique',
+        terms: 'Conditions',
+        privacy: 'Confidentialité',
+        cookies: 'Cookies',
+        builtFor: 'Conçu pour les banques, cliniques, assureurs et services publics.',
+      }
+    : {
+        partner: 'Become a Partner',
+        sectors: ['Banks', 'Clinics', 'Insurance', 'Public Services'],
+        product: 'Product',
+        features: 'Features',
+        howItWorks: 'How it works',
+        company: 'Company',
+        about: 'About us',
+        contact: 'Contact Us',
+        legal: 'Legal',
+        terms: 'Terms',
+        privacy: 'Privacy',
+        cookies: 'Cookies',
+        builtFor: 'Built for banks, clinics, insurers, and public services.',
+      };
 
   return (
     <div className="min-h-screen overflow-hidden" style={{ background: C.bg }}>
@@ -39,11 +70,11 @@ export default function Home() {
       {/* Header */}
       <header className="relative z-10 border-b backdrop-blur-2xl"
         style={{ background: 'rgba(255,255,255,0.75)', borderColor: 'rgba(185,28,28,0.1)', boxShadow: '0 1px 40px rgba(185,28,28,0.05)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-3">
           <div className="flex items-center gap-3">
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-14 w-auto object-contain mix-blend-multiply" />
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply sm:h-14" />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3">
             <LanguageSwitcher variant="outline" />
             <Link to={createPageUrl('AdminLogin')}>
               <button className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
@@ -86,9 +117,9 @@ export default function Home() {
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
           <Link to={createPageUrl('Institutions')}>
-            <button className="group flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-2xl"
+            <button className="group flex w-full items-center justify-center gap-3 px-6 py-4 rounded-2xl text-base font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-2xl sm:w-auto sm:px-8"
               style={{
                 background: `linear-gradient(135deg, ${C.red}, #991b1b)`,
                 boxShadow: `0 8px 30px rgba(185,28,28,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`,
@@ -99,7 +130,7 @@ export default function Home() {
             </button>
           </Link>
           <Link to={createPageUrl('MyAppointments')}>
-            <button className="flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold transition-all duration-300 shadow hover:shadow-lg"
+            <button className="flex w-full items-center justify-center gap-2 px-6 py-4 rounded-2xl text-base font-semibold transition-all duration-300 shadow hover:shadow-lg sm:w-auto sm:px-8"
               style={{
                 background: 'rgba(255,255,255,0.8)',
                 border: `1px solid rgba(21,128,61,0.25)`,
@@ -111,13 +142,13 @@ export default function Home() {
             </button>
           </Link>
           <Link to="/InstitutionRegister">
-            <button className="flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold transition-all duration-300 shadow hover:shadow-lg border"
+            <button className="flex w-full items-center justify-center gap-2 px-6 py-4 rounded-2xl text-base font-semibold transition-all duration-300 shadow hover:shadow-lg border sm:w-auto sm:px-8"
               style={{
                 background: 'rgba(255,255,255,0.85)',
                 border: `1px solid rgba(26,10,10,0.15)`,
                 color: C.text,
               }}>
-              Become a Partner
+              {copy.partner}
               <ChevronRight className="w-4 h-4" />
             </button>
           </Link>
@@ -141,7 +172,7 @@ export default function Home() {
 
       {/* Feature Cards */}
       <section className="relative z-10 px-4 pb-24">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-5">
+        <div className="max-w-5xl mx-auto grid gap-5 md:grid-cols-3">
           {[
             { icon: Zap, label: t('fastBooking'), desc: t('fastBookingDesc'), color: C.red, glow: 'rgba(185,28,28,0.12)' },
             { icon: Clock, label: t('saveTime'), desc: t('saveTimeDesc'), color: C.gold, glow: 'rgba(212,175,106,0.12)' },
@@ -184,7 +215,7 @@ export default function Home() {
                 Premium appointment booking for institutions that want smoother queues, faster service, and a calmer customer experience.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {['Banks', 'Clinics', 'Insurance', 'Public Services'].map((label) => (
+                {copy.sectors.map((label) => (
                   <span
                     key={label}
                     className="rounded-full px-3 py-1 text-xs font-medium"
@@ -202,45 +233,45 @@ export default function Home() {
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
-                Product
+                {copy.product}
               </p>
               <div className="mt-4 flex flex-col gap-3 text-sm">
                 <Link to={createPageUrl('Features')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  Features
+                  {copy.features}
                 </Link>
                 <Link to={createPageUrl('HowItWorks')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  How it works
+                  {copy.howItWorks}
                 </Link>
               </div>
             </div>
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
-                Company
+                {copy.company}
               </p>
               <div className="mt-4 flex flex-col gap-3 text-sm">
                 <Link to={createPageUrl('About')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  About us
+                  {copy.about}
                 </Link>
                 <Link to={createPageUrl('Contact')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  Contact Us
+                  {copy.contact}
                 </Link>
               </div>
             </div>
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: C.text }}>
-                Legal
+                {copy.legal}
               </p>
               <div className="mt-4 flex flex-col gap-3 text-sm">
                 <Link to={createPageUrl('Terms')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  Terms
+                  {copy.terms}
                 </Link>
                 <Link to={createPageUrl('Privacy')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  Privacy
+                  {copy.privacy}
                 </Link>
                 <Link to={createPageUrl('Cookies')} className="transition-opacity hover:opacity-70" style={{ color: C.textMuted }}>
-                  Cookies
+                  {copy.cookies}
                 </Link>
               </div>
             </div>
@@ -251,7 +282,7 @@ export default function Home() {
             style={{ color: C.textMuted }}
           >
             <p>{t('footer')}</p>
-            <p>Built for banks, clinics, insurers, and public services.</p>
+            <p>{copy.builtFor}</p>
           </div>
         </div>
       </footer>

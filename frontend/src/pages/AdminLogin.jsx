@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, ArrowRight, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function AdminLogin() {
   const { login } = useAuth();
+  const { lang } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState('');
@@ -17,6 +19,41 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isShaking, setIsShaking] = useState(false);
+  const copy = lang === 'fr'
+    ? {
+        emailError: "Incluez le symbole @ dans l'adresse e-mail.",
+        loginFailed: 'Échec de la connexion',
+        premiumAccess: 'Accès Premium',
+        heroTitle: "Heureux de vous revoir dans l'espace des opérations.",
+        heroDesc: "Connectez-vous pour gérer les files, les rendez-vous, les validations d'institutions et les opérations du personnel depuis une seule interface.",
+        protectedWorkspace: 'Espace Protégé',
+        protectedDesc: "L'accès est limité au personnel, aux administrateurs et aux administrateurs plateforme via un routage basé sur les rôles après connexion.",
+        adminPortal: 'Portail Admin',
+        adminStaffLogin: 'Connexion Admin / Personnel',
+        assignedCredentials: 'Utilisez les identifiants qui vous ont été attribués pour accéder au tableau de bord.',
+        email: 'E-mail',
+        password: 'Mot de passe',
+        signIn: 'Se connecter',
+        signingIn: 'Connexion...',
+        logoHint: "Cliquez sur le logo ci-dessus à tout moment pour revenir à l'accueil.",
+      }
+    : {
+        emailError: 'Include the @ in the email address.',
+        loginFailed: 'Login failed',
+        premiumAccess: 'Premium Access',
+        heroTitle: 'Welcome back to the operations suite.',
+        heroDesc: 'Sign in to manage queues, appointments, institution approvals, and staff operations from a single control surface.',
+        protectedWorkspace: 'Protected Workspace',
+        protectedDesc: 'Access is limited to staff, admins, and platform administrators with role-based routing after sign-in.',
+        adminPortal: 'Admin Portal',
+        adminStaffLogin: 'Admin / Staff Login',
+        assignedCredentials: 'Use your assigned account credentials to enter the dashboard.',
+        email: 'Email',
+        password: 'Password',
+        signIn: 'Sign in',
+        signingIn: 'Signing in…',
+        logoHint: 'Click the logo above any time to return to the home page.',
+      };
 
   const triggerShake = () => {
     setIsShaking(false);
@@ -28,7 +65,7 @@ export default function AdminLogin() {
 
   const validateEmailTransition = () => {
     if (email.trim() && !email.includes('@')) {
-      setEmailError('Include the @ in the email address.');
+      setEmailError(copy.emailError);
       triggerShake();
       return false;
     }
@@ -48,7 +85,7 @@ export default function AdminLogin() {
       const next = location.state?.from || (user?.role === 'PLATFORM_ADMIN' ? '/InstitutionApplications' : '/Dashboard');
       navigate(next, { replace: true });
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || copy.loginFailed);
     } finally {
       setSubmitting(false);
     }
@@ -94,12 +131,12 @@ export default function AdminLogin() {
       </div>
 
       <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col">
-        <header className="flex items-center justify-between py-2 sm:py-4">
+        <header className="flex flex-wrap items-center justify-between gap-3 py-2 sm:py-4">
           <Link to={createPageUrl('Home')} className="inline-flex items-center">
             <img
               src="/RDV%20logo.png"
               alt="RDV.bi"
-              className="h-16 w-auto object-contain mix-blend-multiply sm:h-20"
+              className="h-14 w-auto object-contain mix-blend-multiply sm:h-20"
             />
           </Link>
           <LanguageSwitcher variant="outline" />
@@ -143,13 +180,13 @@ export default function AdminLogin() {
                   }}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  Premium Access
+                  {copy.premiumAccess}
                 </div>
                 <h1 className="mt-8 max-w-md text-5xl font-semibold leading-tight text-[#24160d]">
-                  Welcome back to the operations suite.
+                  {copy.heroTitle}
                 </h1>
                 <p className="mt-5 max-w-lg text-base leading-7 text-[#5e4b3b]">
-                  Sign in to manage queues, appointments, institution approvals, and staff operations from a single control surface.
+                  {copy.heroDesc}
                 </p>
               </div>
 
@@ -166,9 +203,9 @@ export default function AdminLogin() {
                       <ShieldCheck className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#7a6049]">Protected Workspace</p>
+                      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#7a6049]">{copy.protectedWorkspace}</p>
                       <p className="mt-2 text-sm leading-6 text-[#4f3f31]">
-                        Access is limited to staff, admins, and platform administrators with role-based routing after sign-in.
+                        {copy.protectedDesc}
                       </p>
                     </div>
                   </div>
@@ -176,15 +213,15 @@ export default function AdminLogin() {
               </div>
             </section>
 
-            <section className="p-6 sm:p-10 lg:p-12">
+            <section className="p-5 sm:p-10 lg:p-12">
               <div className="mx-auto max-w-md">
                 <div className="mb-8">
                   <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8a6a4d]">
-                    Admin Portal
+                    {copy.adminPortal}
                   </p>
-                  <h2 className="mt-3 text-3xl font-semibold text-[#20150d]">Admin / Staff Login</h2>
+                  <h2 className="mt-3 text-2xl font-semibold text-[#20150d] sm:text-3xl">{copy.adminStaffLogin}</h2>
                   <p className="mt-3 text-sm leading-6 text-[#6b5847]">
-                    Use your assigned account credentials to enter the dashboard.
+                    {copy.assignedCredentials}
                   </p>
                 </div>
 
@@ -204,7 +241,7 @@ export default function AdminLogin() {
 
                 <form className="space-y-5" onSubmit={handleSubmit}>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">Email</label>
+                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">{copy.email}</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a7a5c]" />
                       <Input
@@ -237,7 +274,7 @@ export default function AdminLogin() {
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">Password</label>
+                    <label className="mb-2 block text-sm font-medium text-[#3e2f24]">{copy.password}</label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a7a5c]" />
                       <Input
@@ -265,13 +302,13 @@ export default function AdminLogin() {
                     }}
                     disabled={submitting}
                   >
-                    <span>{submitting ? 'Signing in…' : 'Sign in'}</span>
+                    <span>{submitting ? copy.signingIn : copy.signIn}</span>
                     {!submitting && <ArrowRight className="ml-2 h-4 w-4" />}
                   </Button>
                 </form>
 
                 <div className="mt-6 rounded-2xl border border-white/40 bg-white/24 px-4 py-3 text-xs leading-6 text-[#6d5845]">
-                  Click the logo above any time to return to the home page.
+                  {copy.logoHint}
                 </div>
               </div>
             </section>
