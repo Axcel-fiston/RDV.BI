@@ -1,4 +1,9 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const isLocalBrowser =
+  typeof window !== 'undefined' &&
+  ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+const DEFAULT_PRODUCTION_API_URL = 'https://rdvbi-backend.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL || (isLocalBrowser ? 'http://localhost:4000' : DEFAULT_PRODUCTION_API_URL);
 const ACCESS_TOKEN_KEY = 'rdvbi_access_token';
 const REFRESH_TOKEN_KEY = 'rdvbi_refresh_token';
 const USER_KEY = 'rdvbi_user';
@@ -133,14 +138,26 @@ const clearSession = () => {
   localStorage.removeItem(USER_KEY);
 };
 
+const normalizeFetchError = (error) => {
+  if (error instanceof TypeError && /fetch/i.test(error.message || '')) {
+    return new Error('API unreachable. Check backend availability and CORS configuration.');
+  }
+  return error;
+};
+
 const refreshSession = async () => {
   const refreshToken = getRefreshToken();
   if (!refreshToken) throw new Error('No refresh token');
-  const res = await fetch(`${BASE_URL}/api/auth/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ refresh_token: refreshToken }),
-  });
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+  } catch (error) {
+    throw normalizeFetchError(error);
+  }
   if (!res.ok) throw new Error('Refresh failed');
   const data = await res.json();
   setSession(data);
@@ -160,12 +177,21 @@ const authorizedFetch = async (path, { method = 'GET', headers = {}, body, admin
     opts.headers['Authorization'] = `Bearer ${token}`;
   }
 
-  let res = await fetch(`${BASE_URL}${path}`, opts);
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, opts);
+  } catch (error) {
+    throw normalizeFetchError(error);
+  }
   if ((res.status === 401 || (admin && res.status === 403)) && getRefreshToken()) {
     try {
       const newToken = await refreshSession();
       opts.headers['Authorization'] = `Bearer ${newToken}`;
-      res = await fetch(`${BASE_URL}${path}`, opts);
+      try {
+        res = await fetch(`${BASE_URL}${path}`, opts);
+      } catch (error) {
+        throw normalizeFetchError(error);
+      }
     } catch (e) {
       clearSession();
       throw e;
@@ -195,11 +221,16 @@ const request = authorizedFetch;
 export const api = {
   auth: {
     login: async ({ email, password }) => {
-      const res = await fetch(`${BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      let res;
+      try {
+        res = await fetch(`${BASE_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+      } catch (error) {
+        throw normalizeFetchError(error);
+      }
       if (!res.ok) {
         const raw = await res.text();
         let message = raw || 'Login failed';

@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { api } from '@/api/apiClient';
 import { 
-  Building2, Calendar, CheckCircle2, ChevronLeft, ArrowRight, 
+  Building2, CheckCircle2, ChevronLeft, ArrowRight, 
   Loader2, Upload, Globe, Phone, Mail, MapPin, User, Briefcase
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/LanguageContext';
 
 const C = {
   red: '#b91c1c', green: '#15803d', gold: '#d4af6a',
@@ -29,6 +30,7 @@ const TYPE_OPTIONS = [
 const STEPS = ['institution', 'admin', 'review'];
 
 export default function JoinPlatform() {
+  const { lang, t } = useLanguage();
   const [step, setStep] = useState(0);
   const [submitError, setSubmitError] = useState('');
   const [form, setForm] = useState({
@@ -40,6 +42,99 @@ export default function JoinPlatform() {
   const [submitted, setSubmitted] = useState(false);
   const [logoFile, setLogoFile] = useState(null);
   const [logoUploading, setLogoUploading] = useState(false);
+  const copy = lang === 'fr'
+    ? {
+        joinInstitution: "Rejoindre en tant qu'institution",
+        heroTitle: 'Inscrivez votre institution',
+        heroDesc: 'Rejoignez plus de 50 institutions qui utilisent deja RDV.bi pour gerer les rendez-vous et reduire les files d attente.',
+        steps: ['Infos institution', 'Compte admin', 'Validation'],
+        aboutInstitution: 'A propos de votre institution',
+        institutionName: "Nom de l'institution *",
+        institutionType: "Type d'institution *",
+        slug: 'Slug URL *',
+        yourPage: 'Votre page :',
+        description: 'Description',
+        address: 'Adresse',
+        website: 'Site web',
+        logo: 'Logo',
+        uploadLogo: "Telecharger le logo de l institution (optionnel)",
+        continue: 'Continuer',
+        adminAccount: 'Compte administrateur',
+        adminFullName: "Nom complet de l administrateur *",
+        institutionEmail: "E-mail de contact de l'institution *",
+        adminLoginEmail: 'E-mail de connexion admin *',
+        adminPassword: 'Mot de passe admin *',
+        minChars: 'Au moins 8 caracteres',
+        phone: 'Telephone',
+        workingHours: 'Horaires',
+        workingHoursPlaceholder: 'ex. Lundi-Vendredi, 7h30-16h30',
+        back: 'Retour',
+        review: 'Verifier',
+        reviewTitle: 'Verifiez votre demande',
+        bookingUrl: 'URL de reservation',
+        type: 'Type',
+        institutionPhone: "Telephone de l'institution",
+        adminName: 'Nom admin',
+        adminLogin: 'Connexion admin',
+        submitAgreement: "En soumettant, vous acceptez les conditions d utilisation de RDV.bi. Votre demande sera examinee sous 1 a 2 jours ouvrables.",
+        submit: 'Soumettre la demande',
+        submitError: "Impossible d'envoyer la demande",
+        submittedTitle: 'Demande envoyee !',
+        submittedText: "Merci d avoir demande a rejoindre RDV.bi. Notre equipe examinera votre demande et vous recontactera a l adresse",
+        submittedTail: 'sous 1 a 2 jours ouvrables.',
+        nextSteps: 'Prochaines etapes',
+        nextItems: [
+          'Notre equipe examine votre demande',
+          'Nous verifions les informations de votre institution',
+          'Votre page est mise en ligne et les clients peuvent reserver',
+        ],
+      }
+    : {
+        joinInstitution: 'Join as an Institution',
+        heroTitle: 'Register Your Institution',
+        heroDesc: 'Join 50+ institutions already using RDV.bi to manage appointments and reduce queues.',
+        steps: ['Institution Info', 'Admin Account', 'Review'],
+        aboutInstitution: 'About Your Institution',
+        institutionName: 'Institution Name *',
+        institutionType: 'Institution Type *',
+        slug: 'URL Slug *',
+        yourPage: 'Your page:',
+        description: 'Description',
+        address: 'Address',
+        website: 'Website',
+        logo: 'Logo',
+        uploadLogo: 'Upload institution logo (optional)',
+        continue: 'Continue',
+        adminAccount: 'Admin Account',
+        adminFullName: 'Admin Full Name *',
+        institutionEmail: 'Institution Contact Email *',
+        adminLoginEmail: 'Admin Login Email *',
+        adminPassword: 'Admin Password *',
+        minChars: 'At least 8 characters',
+        phone: 'Phone Number',
+        workingHours: 'Working Hours',
+        workingHoursPlaceholder: 'e.g. Monday-Friday, 7:30am-4:30pm',
+        back: 'Back',
+        review: 'Review',
+        reviewTitle: 'Review Your Application',
+        bookingUrl: 'Booking URL',
+        type: 'Type',
+        institutionPhone: 'Institution Phone',
+        adminName: 'Admin Name',
+        adminLogin: 'Admin Login',
+        submitAgreement: "By submitting, you agree to RDV.bi's terms of service. Your application will be reviewed within 1-2 business days.",
+        submit: 'Submit Application',
+        submitError: 'Unable to submit the application',
+        submittedTitle: 'Application Submitted!',
+        submittedText: 'Thank you for applying to join RDV.bi. Our team will review your application and get back to you at',
+        submittedTail: 'within 1-2 business days.',
+        nextSteps: 'What happens next?',
+        nextItems: [
+          'Our team reviews your application',
+          'We verify your institution details',
+          'Your page goes live - customers can book!',
+        ],
+      };
 
   const mutation = useMutation({
     mutationFn: (data) => api.entities.Institution.create(data),
@@ -48,7 +143,7 @@ export default function JoinPlatform() {
       setSubmitted(true);
     },
     onError: (error) => {
-      setSubmitError(error.message || 'Unable to submit the application');
+      setSubmitError(error.message || copy.submitError);
     },
   });
 
@@ -100,14 +195,14 @@ export default function JoinPlatform() {
             style={{ background: 'linear-gradient(135deg, #15803d20, #15803d30)', border: '2px solid #15803d40' }}>
             <CheckCircle2 className="w-10 h-10" style={{ color: C.green }} />
           </div>
-          <h1 className="text-2xl font-bold mb-3" style={{ color: C.text }}>Application Submitted!</h1>
+          <h1 className="text-2xl font-bold mb-3" style={{ color: C.text }}>{copy.submittedTitle}</h1>
           <p className="text-sm leading-relaxed mb-6" style={{ color: C.textMuted }}>
-            Thank you for applying to join RDV.bi. Our team will review your application and get back to you at <strong>{form.admin_email}</strong> within 1–2 business days.
+            {copy.submittedText} <strong>{form.admin_email}</strong> {copy.submittedTail}
           </p>
           <div className="rounded-xl p-4 mb-6 text-left space-y-2"
             style={{ background: 'rgba(21,128,61,0.05)', border: '1px solid rgba(21,128,61,0.2)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: C.green }}>What happens next?</p>
-            {['Our team reviews your application', 'We verify your institution details', 'Your page goes live — customers can book!'].map((txt, i) => (
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: C.green }}>{copy.nextSteps}</p>
+            {copy.nextItems.map((txt, i) => (
               <div key={i} className="flex items-start gap-2">
                 <div className="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0 text-xs font-bold text-white"
                   style={{ background: C.green }}>{i + 1}</div>
@@ -117,7 +212,7 @@ export default function JoinPlatform() {
           </div>
           <Link to={createPageUrl('Home')}>
             <Button className="w-full text-white" style={{ background: `linear-gradient(135deg, ${C.red}, #991b1b)` }}>
-              Back to Home
+              {t('backToHome')}
             </Button>
           </Link>
         </div>
@@ -138,13 +233,9 @@ export default function JoinPlatform() {
             </button>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: `linear-gradient(135deg, ${C.red}, ${C.green})` }}>
-              <Calendar className="w-4 h-4 text-white" />
-            </div>
-            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
+            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-16 w-auto object-contain mix-blend-multiply sm:h-20" />
           </div>
-          <span className="ml-auto text-sm font-medium" style={{ color: C.textMuted }}>Join as an Institution</span>
+          <span className="ml-auto text-sm font-medium" style={{ color: C.textMuted }}>{copy.joinInstitution}</span>
         </div>
       </header>
 
@@ -155,15 +246,13 @@ export default function JoinPlatform() {
             style={{ background: `linear-gradient(135deg, ${C.red}15, ${C.green}15)`, border: `1px solid ${C.red}20` }}>
             <Building2 className="w-8 h-8" style={{ color: C.red }} />
           </div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: C.text }}>Register Your Institution</h1>
-          <p className="text-sm" style={{ color: C.textMuted }}>
-            Join 50+ institutions already using RDV.bi to manage appointments and reduce queues.
-          </p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: C.text }}>{copy.heroTitle}</h1>
+          <p className="text-sm" style={{ color: C.textMuted }}>{copy.heroDesc}</p>
         </div>
 
         {/* Progress Steps */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          {['Institution Info', 'Admin Account', 'Review'].map((label, i) => (
+          {copy.steps.map((label, i) => (
             <React.Fragment key={i}>
               <div className="flex items-center gap-2">
                 <div className={cn(
@@ -187,16 +276,16 @@ export default function JoinPlatform() {
           {/* Step 1: Institution Info */}
           {step === 0 && (
             <div className="space-y-5">
-              <h2 className="font-bold text-lg" style={{ color: C.text }}>About Your Institution</h2>
+              <h2 className="font-bold text-lg" style={{ color: C.text }}>{copy.aboutInstitution}</h2>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Institution Name *</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.institutionName}</label>
                 <Input value={form.institution_name} onChange={e => set('institution_name', e.target.value)}
                   placeholder="e.g. Banque Nationale du Burundi" className="h-12" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Institution Type *</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.institutionType}</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {TYPE_OPTIONS.map(opt => (
                     <button key={opt.value} onClick={() => set('institution_type', opt.value)}
@@ -212,9 +301,9 @@ export default function JoinPlatform() {
 
               <div>
                 <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>
-                  URL Slug *
+                  {copy.slug}
                   <span className="ml-2 text-xs font-normal" style={{ color: C.textMuted }}>
-                    Your page: rdv.bi/booking/<strong>{form.slug || 'your-slug'}</strong>
+                    {copy.yourPage} rdv.bi/booking/<strong>{form.slug || 'your-slug'}</strong>
                   </span>
                 </label>
                 <Input
@@ -226,14 +315,14 @@ export default function JoinPlatform() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Description</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.description}</label>
                 <Textarea value={form.description} onChange={e => set('description', e.target.value)}
                   placeholder="Brief description of your institution and services offered..." rows={3} />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Address</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.address}</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input value={form.address} onChange={e => set('address', e.target.value)}
@@ -241,7 +330,7 @@ export default function JoinPlatform() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Website</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.website}</label>
                   <div className="relative">
                     <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input value={form.website} onChange={e => set('website', e.target.value)}
@@ -251,7 +340,7 @@ export default function JoinPlatform() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Logo</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.logo}</label>
                 <label className="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all"
                   style={{ border: '2px dashed rgba(185,28,28,0.2)', background: 'rgba(185,28,28,0.02)' }}>
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
@@ -263,7 +352,7 @@ export default function JoinPlatform() {
                     <Upload className="w-5 h-5" style={{ color: C.textMuted }} />
                   )}
                   <span className="text-sm" style={{ color: C.textMuted }}>
-                    {logoFile ? logoFile.name : 'Upload institution logo (optional)'}
+                    {logoFile ? logoFile.name : copy.uploadLogo}
                   </span>
                 </label>
               </div>
@@ -271,7 +360,7 @@ export default function JoinPlatform() {
               <Button onClick={() => setStep(1)} disabled={!step1Valid}
                 className="w-full h-12 text-white font-semibold"
                 style={{ background: step1Valid ? `linear-gradient(135deg, ${C.red}, #991b1b)` : undefined }}>
-                Continue <ArrowRight className="w-4 h-4 ml-2" />
+                {copy.continue} <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           )}
@@ -279,11 +368,11 @@ export default function JoinPlatform() {
           {/* Step 2: Contact */}
           {step === 1 && (
             <div className="space-y-5">
-              <h2 className="font-bold text-lg" style={{ color: C.text }}>Admin Account</h2>
+              <h2 className="font-bold text-lg" style={{ color: C.text }}>{copy.adminAccount}</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Admin Full Name *</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.adminFullName}</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input value={form.admin_full_name} onChange={e => set('admin_full_name', e.target.value)}
@@ -291,7 +380,7 @@ export default function JoinPlatform() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Institution Contact Email *</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.institutionEmail}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input type="email" value={form.email} onChange={e => set('email', e.target.value)}
@@ -302,7 +391,7 @@ export default function JoinPlatform() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Admin Login Email *</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.adminLoginEmail}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input type="email" value={form.admin_email} onChange={e => set('admin_email', e.target.value)}
@@ -310,17 +399,17 @@ export default function JoinPlatform() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Admin Password *</label>
+                  <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.adminPassword}</label>
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input type="password" value={form.admin_password} onChange={e => set('admin_password', e.target.value)}
-                      placeholder="At least 8 characters" className="h-12 pl-10" />
+                      placeholder={copy.minChars} className="h-12 pl-10" />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Phone Number</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.phone}</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input type="tel" value={form.phone} onChange={e => set('phone', e.target.value)}
@@ -329,17 +418,17 @@ export default function JoinPlatform() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>Working Hours</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: C.text }}>{copy.workingHours}</label>
                 <Input value={form.working_hours_description} onChange={e => set('working_hours_description', e.target.value)}
-                  placeholder="e.g. Monday–Friday, 7:30am–4:30pm" className="h-12" />
+                  placeholder={copy.workingHoursPlaceholder} className="h-12" />
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(0)} className="flex-1 h-12">Back</Button>
+                <Button variant="outline" onClick={() => setStep(0)} className="flex-1 h-12">{copy.back}</Button>
                 <Button onClick={() => setStep(2)} disabled={!step2Valid}
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: step2Valid ? `linear-gradient(135deg, ${C.red}, #991b1b)` : undefined }}>
-                  Review <ArrowRight className="w-4 h-4 ml-2" />
+                  {copy.review} <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </div>
@@ -348,7 +437,7 @@ export default function JoinPlatform() {
           {/* Step 3: Review & Submit */}
           {step === 2 && (
             <div className="space-y-5">
-              <h2 className="font-bold text-lg" style={{ color: C.text }}>Review Your Application</h2>
+              <h2 className="font-bold text-lg" style={{ color: C.text }}>{copy.reviewTitle}</h2>
 
               {submitError && (
                 <div
@@ -361,16 +450,16 @@ export default function JoinPlatform() {
 
               <div className="space-y-3">
                 {[
-                  { label: 'Institution Name', value: form.institution_name },
-                  { label: 'Type', value: TYPE_OPTIONS.find(o => o.value === form.institution_type)?.label },
-                  { label: 'Booking URL', value: `rdv.bi/booking/${form.slug}` },
-                  { label: 'Description', value: form.description },
-                  { label: 'Address', value: form.address },
-                  { label: 'Institution Email', value: form.email },
-                  { label: 'Phone', value: form.phone },
-                  { label: 'Admin Name', value: form.admin_full_name },
-                  { label: 'Admin Login', value: form.admin_email },
-                  { label: 'Working Hours', value: form.working_hours_description },
+                  { label: copy.institutionName.replace(' *', ''), value: form.institution_name },
+                  { label: copy.type, value: TYPE_OPTIONS.find(o => o.value === form.institution_type)?.label },
+                  { label: copy.bookingUrl, value: `rdv.bi/booking/${form.slug}` },
+                  { label: copy.description, value: form.description },
+                  { label: copy.address, value: form.address },
+                  { label: copy.institutionEmail.replace(' *', ''), value: form.email },
+                  { label: copy.institutionPhone, value: form.phone },
+                  { label: copy.adminName, value: form.admin_full_name },
+                  { label: copy.adminLogin, value: form.admin_email },
+                  { label: copy.workingHours, value: form.working_hours_description },
                 ].filter(r => r.value).map(({ label, value }) => (
                   <div key={label} className="flex justify-between gap-4 py-2 border-b"
                     style={{ borderColor: 'rgba(185,28,28,0.08)' }}>
@@ -383,17 +472,17 @@ export default function JoinPlatform() {
               <div className="rounded-xl p-4 text-sm"
                 style={{ background: 'rgba(212,175,106,0.1)', border: '1px solid rgba(212,175,106,0.3)' }}>
                 <p style={{ color: C.textMuted }}>
-                  By submitting, you agree to RDV.bi's terms of service. Your application will be reviewed within 1–2 business days.
+                  {copy.submitAgreement}
                 </p>
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(1)} className="flex-1 h-12">Back</Button>
+                <Button variant="outline" onClick={() => setStep(1)} className="flex-1 h-12">{copy.back}</Button>
                 <Button onClick={handleSubmit} disabled={mutation.isPending}
                   className="flex-1 h-12 text-white font-semibold"
                   style={{ background: `linear-gradient(135deg, ${C.green}, #166534)` }}>
                   {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
-                  Submit Application
+                  {copy.submit}
                 </Button>
               </div>
             </div>

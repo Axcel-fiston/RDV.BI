@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api/apiClient';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Building2, Search, ArrowRight, Calendar, ChevronLeft } from 'lucide-react';
+import { Building2, Search, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -63,11 +63,7 @@ export default function Institutions() {
                             </button>
                         </Link>
                         <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style={{ background: `linear-gradient(135deg, ${C.red}, ${C.green})`, boxShadow: '0 4px 12px rgba(185,28,28,0.3)' }}>
-                                <Calendar className="w-4 h-4 text-white" />
-                            </div>
-                            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-12 w-auto object-contain mix-blend-multiply" />
+                            <img src="/RDV%20logo.png" alt="RDV.bi" className="h-16 w-auto object-contain mix-blend-multiply sm:h-20" />
                         </div>
                     </div>
                     <LanguageSwitcher variant="outline" />
