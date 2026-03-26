@@ -6,7 +6,6 @@ import { createPageUrl } from '@/utils';
 import { Building2, Search, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import PublicFooter from '@/components/PublicFooter';
 
 const TYPE_ICONS = {
     bank: '🏦', hospital: '🏥', insurance: '🛡️',
@@ -176,8 +175,6 @@ export default function Institutions() {
                 )}
             </div>
         </div>
-        <PublicFooter />
-    </div>
-);
+    );
 }
 
